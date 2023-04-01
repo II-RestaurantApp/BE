@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "RestaurantAppBE": {
+    "RestaurantAppBE.": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
