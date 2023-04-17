@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using RestaurantAppBE.DataAccess.Context;
+using RestaurantAppBE.DataAccess.Repositories;
+using RestaurantAppBE.DataAccess.Repositories.Interfaces;
 using RestaurantAppBE.RestServices.Repositories;
 using RestaurantAppBE.RestServices.Repositories.Interfaces;
 using RestaurantAppBE.RestServices.Services;
@@ -33,8 +35,10 @@ builder.Services.AddDbContext<RestaurantAppContext>(option => option.UseSqlServe
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ISessionService, SessionService>();
+builder.Services.AddScoped<IItemService, ItemService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IItemRepository, ItemRepository>();
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
