@@ -30,11 +30,32 @@ namespace RestaurantAppBE.DataAccess.Context
                 .WithMany(m => m.Ingrediente)
                 .HasForeignKey(am => am.ItemsItemId);
 
+            builder.Entity<ComandaItem>().HasKey(i => new
+            {
+                i.ComandaId,
+                i.ItemItemId
+            });
+
+            builder.Entity<ComandaItem>()
+                .HasOne(am => am.Item)
+                .WithMany(a => a.Comandas)
+                .HasForeignKey(am => am.ItemItemId);
+
+            builder.Entity<ComandaItem>()
+                .HasOne(am => am.Comanda)
+                .WithMany(m => m.Items)
+                .HasForeignKey(am => am.ComandaId);
+
+           //builder.Entity<User>()
+           // .HasMany(u => u.Comenzi)
+           // .WithOne(c => c.User)
+           // .HasForeignKey(c => c.UserId);
         }
 
 
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Item> Items { get; set; }
         public virtual DbSet<Ingredient> Ingredients { get; set; }
+        public virtual DbSet<Comanda> Comenzi { get; set; }
     }
 }
