@@ -14,11 +14,9 @@ namespace RestaurantAppBE.RestServices.Services
             _itemRepository = itemRepository;
         }
 
-        public async Task<int?> RegisterItem(ItemDto item)
+        public async Task<int> RegisterItem(ItemDto item)
         {
-            
-            var result = await _itemRepository.RegisterItem(item);
-            return result == 1 ? result : null;
+            return await _itemRepository.RegisterItem(item);
         }
     }
 }

@@ -19,9 +19,6 @@ namespace RestaurantAppBE.RestServices.Controllers
         public async Task<int?> RegisterItem([FromBody] ItemDto item)
         {
             return await _itemService.RegisterItem(item);
-            
-            }
         }
     }
-
-
+}

@@ -1,5 +1,7 @@
-﻿using RestaurantAppBE.DataAccess.Context;
+﻿using Microsoft.EntityFrameworkCore;
+using RestaurantAppBE.DataAccess.Context;
 using RestaurantAppBE.DataAccess.DTOs;
+using RestaurantAppBE.DataAccess.Models;
 using RestaurantAppBE.DataAccess.Repositories.Interfaces;
 
 namespace RestaurantAppBE.DataAccess.Repositories
@@ -16,17 +18,33 @@ namespace RestaurantAppBE.DataAccess.Repositories
         }
         public async Task<int> RegisterItem(ItemDto item)
         {
-            await _context.Items.AddAsync(new Models.Item
+            var alreadyExistingItem =
+                await _context.Items
+                    .Where((currentItem) => currentItem.Denumire.Equals(item.Denumire))
+                    .FirstOrDefaultAsync();
+            if (alreadyExistingItem is not null)
+            {
+                return 0;
+            }
+
+
+            await _context.Items.AddAsync(new Item
             {
                 Denumire = item.Denumire,
                 Gramaj = item.Gramaj,
-                Pret = item.Pret,
-                Ingrediente = item.Ingrediente,
-
+                Pret = item.Pret
             });
-
+            await _context.SaveChangesAsync();
+            var lastItem = _context.Items.OrderByDescending(item => item.Id).FirstOrDefault();
+            item.Ingrediente?.ForEach(async (ingredient) =>
+            {
+                await _context.AddAsync(new ItemIngredient
+                {
+                    ItemsItemId = lastItem.Id,
+                    IngredientId = ingredient.IngrId
+                });
+            });
             return await _context.SaveChangesAsync();
-            
         }
     }
 }
