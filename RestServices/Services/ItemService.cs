@@ -18,5 +18,10 @@ namespace RestaurantAppBE.RestServices.Services
         {
             return await _itemRepository.RegisterItem(item);
         }
+
+        public async Task<int> UpdateItem(ItemDto item,int id)
+        {
+            return await _itemRepository.UpdateItem(item,id);
+        }
     }
 }
