@@ -2,8 +2,8 @@
 
 namespace RestaurantAppBE.RestServices.Services.Interfaces
 {
-    public interface IItemService
+    public interface IIngredientService
     {
-        Task<int> RegisterItem(ItemDto item);
+        Task<int> RegisterIngredient(IngredientDto ingredient);
     }
 }
