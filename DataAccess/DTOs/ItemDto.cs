@@ -6,8 +6,7 @@ namespace RestaurantAppBE.DataAccess.DTOs
     {
         public string Denumire { get; set; }
         public double Gramaj { get; set; }
-
         public int Pret { get; set; }
-        public List<ItemIngredient>? Ingrediente { get; set; }
+        public List<Ingredient>? Ingrediente { get; set; }
     }
 }
