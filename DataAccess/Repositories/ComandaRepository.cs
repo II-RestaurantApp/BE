@@ -1,5 +1,6 @@
 ﻿using RestaurantAppBE.DataAccess.Context;
 using RestaurantAppBE.DataAccess.DTOs;
+using RestaurantAppBE.DataAccess.Models;
 using RestaurantAppBE.DataAccess.Repositories.Interfaces;
 
 namespace RestaurantAppBE.DataAccess.Repositories
@@ -17,13 +18,23 @@ namespace RestaurantAppBE.DataAccess.Repositories
 
         public async Task<int> RegisterComanda(ComandaDto comanda)
         {
-            await _context.Comenzi.AddAsync(new Models.Comanda
+            await _context.Comenzi.AddAsync(new Comanda
             {
-                Items = comanda.Item,
                 Total = comanda.Total,
-                UserId = comanda.UserId,
-                User = comanda.User
+                UserId = comanda.UserId
             });
+
+            await _context.SaveChangesAsync();
+            var lastComanda = _context.Comenzi.OrderByDescending(comanda => comanda.ComId).FirstOrDefault();
+            comanda.Item?.ForEach(async (item) =>
+            {
+                await _context.AddAsync(new ComandaItem
+                {
+                    ComandaId = lastComanda.ComId,
+                    ItemItemId = item.Id
+                });
+            });
+
             return await _context.SaveChangesAsync();
 
         }

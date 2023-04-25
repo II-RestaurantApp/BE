@@ -1,20 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using RestaurantAppBE.Migrations;
 
 namespace RestaurantAppBE.DataAccess.Models
 {
-    public class Comanda
+    public class ComandaItem
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int ComandaId { get; set; }
+        public Comanda? Comanda { get; set; }
+        public int ItemItemId { get; set; }
+        public Item? Item { get; set; }
 
-        public int ComId { get; set; }
-        public List<ComandaItem>? Items { get; set; }
-        public int Total { get; set; }
-
-        [Display(Name = "UserId")]
-        public int UserId { get; set; }
-        [ForeignKey("UserId")]
-        public User User { get; set; }
     }
 }
