@@ -9,6 +9,15 @@ namespace RestaurantAppBE.RestServices.Services
     {
         public IItemRepository _itemRepository;
 
+        public async Task<List<Item>> GetItem()
+        {
+            return await _itemRepository.GetItem();
+        }
+
+        public async Task<Item> GetItemById(int id)
+        {
+            return await _itemRepository.GetItemById(id);
+        }
 
         public ItemService(IItemRepository itemRepository)
         {
@@ -20,14 +29,9 @@ namespace RestaurantAppBE.RestServices.Services
             return await _itemRepository.RegisterItem(item);
         }
 
-        public async Task<List<Item>> GetItem()
+        public async Task<int> DeleteItem(int id)
         {
-            return await _itemRepository.GetItem();
-        }
-
-        public async Task<Item> GetItemById(int id)
-        {
-            return await _itemRepository.GetItemById(id);
+            return await _itemRepository.DeleteItem(id);
         }
     }
 }
