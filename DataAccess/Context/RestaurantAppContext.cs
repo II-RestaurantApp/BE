@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace RestaurantAppBE.DataAccess.Context
 {
-    public class RestaurantAppContext: DbContext
+    public class RestaurantAppContext : DbContext
     {
         public RestaurantAppContext(DbContextOptions<RestaurantAppContext> options) : base(options)
         {
@@ -38,7 +38,7 @@ namespace RestaurantAppBE.DataAccess.Context
 
             builder.Entity<ComandaItem>()
                 .HasOne(am => am.Item)
-                .WithMany(a => a.Comandas)
+                .WithMany()
                 .HasForeignKey(am => am.ItemItemId);
 
             builder.Entity<ComandaItem>()
@@ -46,10 +46,6 @@ namespace RestaurantAppBE.DataAccess.Context
                 .WithMany(m => m.Items)
                 .HasForeignKey(am => am.ComandaId);
 
-           //builder.Entity<User>()
-           // .HasMany(u => u.Comenzi)
-           // .WithOne(c => c.User)
-           // .HasForeignKey(c => c.UserId);
         }
 
 

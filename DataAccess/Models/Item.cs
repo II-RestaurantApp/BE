@@ -10,9 +10,8 @@ namespace RestaurantAppBE.DataAccess.Models
 
         public int Id { get; set; }
         public string Denumire { get; set; }
-        public double Gramaj { get; set; }  
+        public double Gramaj { get; set; }
         public int Pret { get; set; }
         public List<ItemIngredient>? Ingrediente { get; set; }
-        public List<ComandaItem>? Comandas { get; set; }
     }
 }
