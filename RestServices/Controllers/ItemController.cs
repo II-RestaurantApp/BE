@@ -15,13 +15,39 @@ namespace RestaurantAppBE.RestServices.Controllers
             _itemService = itemService;
         }
 
+        [HttpGet]
+        [Route("{id:int}")]
+
+        public async Task<Item> GetItem(int id)
+        {
+            return await _itemService.GetItemById(id);
+        }
+
+        [HttpGet]
+        public async Task<List<Item>> GetItem()
+        {
+            return await _itemService.GetItem();
+        }
+
         [HttpPost]
         public async Task<int?> RegisterItem([FromBody] ItemDto item)
         {
             return await _itemService.RegisterItem(item);
+        }
+
+
+        [HttpPut]
+        public async Task<int?> UpdateItem([FromBody] ItemDto item, [FromQuery] int id)
+        {
+            return await _itemService.UpdateItem(item, id);
+        }
             
-            }
+        [HttpDelete]
+        [Route("{id:int}")]
+        
+        public async Task<int?> DeleteItem(int id)
+        {
+            return await _itemService.DeleteItem(id);
         }
     }
-
-
+}

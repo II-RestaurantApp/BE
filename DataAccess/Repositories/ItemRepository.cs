@@ -16,6 +16,19 @@ namespace RestaurantAppBE.DataAccess.Repositories
             _configuration = configuration;
             _context = context;
         }
+
+        public async Task<List<Item>> GetItem()
+        {
+            var ItemList = _context.Items.ToListAsync();
+            return await ItemList;
+
+        }
+
+        public async Task<Item> GetItemById(int id)
+        {
+            return await _context.Items.FirstOrDefaultAsync(currentItem => currentItem.Id == id);
+        }
+
         public async Task<int> RegisterItem(ItemDto item)
         {
             var alreadyExistingItem =
@@ -26,7 +39,6 @@ namespace RestaurantAppBE.DataAccess.Repositories
             {
                 return 0;
             }
-
 
             await _context.Items.AddAsync(new Item
             {
@@ -45,6 +57,37 @@ namespace RestaurantAppBE.DataAccess.Repositories
                 });
             });
             return await _context.SaveChangesAsync();
+        }
+
+        
+        public async Task<int> UpdateItem(ItemDto item, int id)
+        {
+            var alreadyExistingItem =
+                await _context.Items
+                    .Where((currentItem) => currentItem.Id == id)
+                    .FirstOrDefaultAsync();
+
+            if (alreadyExistingItem is not null)
+            {
+              alreadyExistingItem.Denumire = item.Denumire;
+              alreadyExistingItem.Pret = item.Pret;
+              alreadyExistingItem.Gramaj = item.Gramaj;
+            }
+
+            return await _context.SaveChangesAsync();
+            }
+
+        public async Task<int> DeleteItem(int id)
+        {
+            var item = await _context.Items.FindAsync(id);
+
+            if (item != null)
+            {
+                _context.Items.Remove(item);
+                return await _context.SaveChangesAsync();
+            }
+
+            return 0;
         }
     }
 }
