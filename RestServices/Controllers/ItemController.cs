@@ -20,5 +20,11 @@ namespace RestaurantAppBE.RestServices.Controllers
         {
             return await _itemService.RegisterItem(item);
         }
+        [HttpDelete]
+        [Route("{id:int}")]
+        public async Task<int?> DeleteItem(int id)
+        {
+            return await _itemService.DeleteItem(id);
+        }
     }
 }

@@ -46,5 +46,18 @@ namespace RestaurantAppBE.DataAccess.Repositories
             });
             return await _context.SaveChangesAsync();
         }
+
+        public async Task<int> DeleteItem(int id)
+        {
+            var item = await _context.Items.FindAsync(id);
+
+            if (item != null)
+            {
+                _context.Items.Remove(item);
+                return await _context.SaveChangesAsync();
+            }
+
+            return 0;
+        }
     }
 }
