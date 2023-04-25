@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RestaurantAppBE.DataAccess.Context;
 using RestaurantAppBE.DataAccess.DTOs;
+using RestaurantAppBE.DataAccess.Models;
 using RestaurantAppBE.DataAccess.Repositories.Interfaces;
 
 namespace RestaurantAppBE.DataAccess.Repositories
@@ -32,6 +33,17 @@ namespace RestaurantAppBE.DataAccess.Repositories
             });
 
             return await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<Ingredient>> GetIngredient()
+        {
+            var IngredientList = _context.Ingredients.ToListAsync();
+            return await IngredientList;
+        }
+
+        public async Task<Ingredient> GetIngredientById(int id)
+        {
+            return await _context.Ingredients.FirstOrDefaultAsync(currentIngredient => currentIngredient.IngrId == id);
         }
     }
 }
