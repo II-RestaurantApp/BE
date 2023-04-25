@@ -18,6 +18,21 @@ namespace RestaurantAppBE.RestServices.Controllers
             _ingredientService = ingredientService;
         }
 
+        [HttpGet]
+        [Route("{id:int}")]
+        public async Task<Ingredient> GetIngredient(int id)
+        {
+            return await _ingredientService.GetIngredientById(id);
+
+
+        }
+
+        [HttpGet]
+        public async Task<List<Ingredient>> GetIngredient()
+        {
+            return await _ingredientService.GetIngredient();
+        }
+
         [HttpPost]
         public async Task<int> RegisterIngredient([FromBody] IngredientDto ingredient)
         {
