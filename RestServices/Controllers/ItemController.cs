@@ -21,8 +21,6 @@ namespace RestaurantAppBE.RestServices.Controllers
         public async Task<Item> GetItem(int id)
         {
             return await _itemService.GetItemById(id);
-
-
         }
 
         [HttpGet]
@@ -36,8 +34,10 @@ namespace RestaurantAppBE.RestServices.Controllers
         {
             return await _itemService.RegisterItem(item);
         }
+
         [HttpDelete]
         [Route("{id:int}")]
+        
         public async Task<int?> DeleteItem(int id)
         {
             return await _itemService.DeleteItem(id);

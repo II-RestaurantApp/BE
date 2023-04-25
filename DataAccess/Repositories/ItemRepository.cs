@@ -28,6 +28,7 @@ namespace RestaurantAppBE.DataAccess.Repositories
         {
             return await _context.Items.FirstOrDefaultAsync(currentItem => currentItem.Id == id);
         }
+
         public async Task<int> RegisterItem(ItemDto item)
         {
             var alreadyExistingItem =
@@ -38,7 +39,6 @@ namespace RestaurantAppBE.DataAccess.Repositories
             {
                 return 0;
             }
-
 
             await _context.Items.AddAsync(new Item
             {
