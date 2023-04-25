@@ -16,6 +16,18 @@ namespace RestaurantAppBE.DataAccess.Repositories
             _configuration = configuration;
             _context = context;
         }
+
+        public async Task<List<Item>> GetItem()
+        {
+            var ItemList = _context.Items.ToListAsync();
+            return await ItemList;
+
+        }
+
+        public async Task<Item> GetItemById(int id)
+        {
+            return await _context.Items.FirstOrDefaultAsync(currentItem => currentItem.Id == id);
+        }
         public async Task<int> RegisterItem(ItemDto item)
         {
             var alreadyExistingItem =
@@ -47,16 +59,17 @@ namespace RestaurantAppBE.DataAccess.Repositories
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<List<Item>> GetItem()
+        public async Task<int> DeleteItem(int id)
         {
-            var ItemList = _context.Items.ToListAsync();
-            return await ItemList;
+            var item = await _context.Items.FindAsync(id);
 
-        }
+            if (item != null)
+            {
+                _context.Items.Remove(item);
+                return await _context.SaveChangesAsync();
+            }
 
-        public async Task<Item> GetItemById(int id)
-        {
-            return await _context.Items.FirstOrDefaultAsync(currentItem => currentItem.Id == id);
+            return 0;
         }
     }
 }
