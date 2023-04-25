@@ -32,7 +32,7 @@ namespace RestaurantAppBE.RestServices.Services
         public async Task<int> UpdateItem(ItemDto item,int id)
         {
             return await _itemRepository.UpdateItem(item,id);
-            }
+        }
             
         public async Task<int> DeleteItem(int id)
         {

@@ -40,7 +40,7 @@ namespace RestaurantAppBE.RestServices.Controllers
         public async Task<int?> UpdateItem([FromBody] ItemDto item, [FromQuery] int id)
         {
             return await _itemService.UpdateItem(item, id);
-            }
+        }
             
         [HttpDelete]
         [Route("{id:int}")]
