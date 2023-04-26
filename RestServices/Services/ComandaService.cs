@@ -1,4 +1,5 @@
 ﻿using RestaurantAppBE.DataAccess.DTOs;
+using RestaurantAppBE.DataAccess.Repositories;
 using RestaurantAppBE.DataAccess.Repositories.Interfaces;
 using RestaurantAppBE.RestServices.Services.Interfaces;
 
@@ -19,6 +20,11 @@ namespace RestaurantAppBE.RestServices.Services
 
             var result = await _comandaRepository.RegisterComanda(comanda);
             return result == 1 ? result : null;
+        }
+
+        public async Task<int> UpdateComanda(ComandaDto comanda, int id)
+        {
+            return await _comandaRepository.UpdateComanda(comanda, id);
         }
     }
 }
