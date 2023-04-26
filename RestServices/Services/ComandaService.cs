@@ -1,7 +1,11 @@
-﻿using RestaurantAppBE.DataAccess.DTOs;
+﻿using Microsoft.AspNetCore.Mvc;
+using RestaurantAppBE.DataAccess.DTOs;
+using RestaurantAppBE.DataAccess.Models;
 using RestaurantAppBE.DataAccess.Repositories;
 using RestaurantAppBE.DataAccess.Repositories.Interfaces;
 using RestaurantAppBE.RestServices.Services.Interfaces;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace RestaurantAppBE.RestServices.Services
 {
@@ -25,6 +29,16 @@ namespace RestaurantAppBE.RestServices.Services
         public async Task<int> UpdateComanda(ComandaDto comanda, int id)
         {
             return await _comandaRepository.UpdateComanda(comanda, id);
+        }
+
+        public async Task<List<Comanda>> GetAllComanda()
+        {
+            return await _comandaRepository.GetAllComanda();
+        }
+
+        public async Task<Comanda> GetComanda([FromQuery] int id)
+        {
+            return await _comandaRepository.GetComanda(id);
         }
     }
 }
