@@ -6,6 +6,7 @@ namespace RestaurantAppBE.DataAccess.Repositories.Interfaces
     public interface IComandaRepository
     {
         Task<int> RegisterComanda(ComandaDto comanda);
+        Task<int> UpdateComanda(ComandaDto comanda, int id);
     }
 }
 
