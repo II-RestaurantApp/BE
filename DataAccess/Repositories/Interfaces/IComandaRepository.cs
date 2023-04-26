@@ -7,6 +7,7 @@ namespace RestaurantAppBE.DataAccess.Repositories.Interfaces
     {
         Task<int> RegisterComanda(ComandaDto comanda);
         Task<int> UpdateComanda(ComandaDto comanda, int id);
+        Task<int> DeleteComanda(int id);
     }
 }
 

@@ -70,6 +70,20 @@ namespace RestaurantAppBE.DataAccess.Repositories
 
             return await _context.SaveChangesAsync();
         }
+
+        public async Task<int> DeleteComanda( int id)
+        {
+            var alreadyExistingComanda =
+                await _context.Comenzi
+                    .Where((currentComanda) => currentComanda.ComId == id)
+                    .FirstOrDefaultAsync();
+            if(alreadyExistingComanda is not null)
+            {
+                _context.Comenzi.Remove(alreadyExistingComanda);
+                return await _context.SaveChangesAsync();
+            }
+            return 0;
+        }
     }
 
 }

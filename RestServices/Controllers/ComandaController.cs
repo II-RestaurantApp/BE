@@ -29,6 +29,13 @@ namespace RestaurantAppBE.RestServices.Controllers
         {
             return await _comandaService.UpdateComanda(comanda, id);
         }
+
+        [HttpDelete]
+        [Route("{id:int}")]
+        public async Task<int?> DeleteComanda([FromQuery] int id)
+        {
+            return await _comandaService.DeleteComanda(id);
+        }
     }
 }
 
