@@ -50,7 +50,7 @@ namespace RestaurantAppBE.DataAccess.Repositories
             if (alreadyExistingComanda is not null)
             {
                 alreadyExistingComanda.Total = comanda.Total;
-                alreadyExistingComanda.UserId = comanda.UserId;
+                //alreadyExistingComanda.UserId = comanda.UserId;
 
                 
                 alreadyExistingComanda.Items = new List<ComandaItem>();
