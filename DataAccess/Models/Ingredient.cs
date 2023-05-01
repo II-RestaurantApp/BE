@@ -10,7 +10,7 @@ namespace RestaurantAppBE.DataAccess.Models
 
         public int IngrId { get; set; }
         public string IngrName { get; set; }
-        
+
         public List<ItemIngredient>? Item { get; set; }
     }
 }
