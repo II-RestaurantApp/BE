@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RestaurantAppBE.DataAccess.Context;
 using RestaurantAppBE.DataAccess.DTOs;
 using RestaurantAppBE.DataAccess.Models;
@@ -69,6 +70,39 @@ namespace RestaurantAppBE.DataAccess.Repositories
             }
 
             return await _context.SaveChangesAsync();
+        }
+
+
+        public async Task<List<Comanda>> GetAllComanda() { 
+            var ComandaList = _context.Comenzi.ToListAsync();
+
+            return await ComandaList;
+        }
+
+        public async Task<Comanda> GetComanda(int id)
+        
+        {
+            var alreadyExistingComanda =
+                await _context.Comenzi
+                    .Where((currentComanda) => currentComanda.ComId == id)
+                    .FirstOrDefaultAsync();
+
+            return  alreadyExistingComanda;
+                }
+
+        public async Task<int> DeleteComanda(int id)
+        {
+            var alreadyExistingComanda =
+               await _context.Comenzi
+                   .Where((currentComanda) => currentComanda.ComId == id)
+                   .FirstOrDefaultAsync();
+
+            if (alreadyExistingComanda is not null)
+            {
+                _context.Comenzi.Remove(alreadyExistingComanda);
+                return await _context.SaveChangesAsync();
+            }
+            return 0;
         }
     }
 

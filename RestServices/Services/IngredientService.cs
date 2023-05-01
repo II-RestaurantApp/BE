@@ -1,4 +1,5 @@
 ﻿using RestaurantAppBE.DataAccess.DTOs;
+using RestaurantAppBE.DataAccess.Models;
 using RestaurantAppBE.DataAccess.Repositories.Interfaces;
 using RestaurantAppBE.RestServices.Services.Interfaces;
 
@@ -13,9 +14,29 @@ namespace RestaurantAppBE.RestServices.Services
             _ingredienRepository = ingredientRepository;
         }
 
+        public async Task<List<Ingredient>> GetIngredient()
+        {
+            return await _ingredienRepository.GetIngredient();
+        }
+
+        public async Task<Ingredient> GetIngredientById(int id)
+        {
+            return await _ingredienRepository.GetIngredientById(id);
+        }
+
         public async Task<int> RegisterIngredient(IngredientDto ingredient)
         {
             return await _ingredienRepository.RegisterIngredient(ingredient);
+        }
+
+        public async Task<int> DeleteIngredient(int id)
+        {
+            return await _ingredienRepository.DeleteIngredient(id);
+        }
+
+        public async Task<int> UpdateIngredient(IngredientDto ingredient, int id)
+        {
+            return await _ingredienRepository.UpdateIngredient(ingredient, id);
         }
     }
 }

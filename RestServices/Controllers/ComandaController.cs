@@ -4,6 +4,7 @@ using RestaurantAppBE.RestServices.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RestaurantAppBE.RestServices.Services;
+using System.Threading.Tasks;
 
 namespace RestaurantAppBE.RestServices.Controllers
 {
@@ -28,7 +29,29 @@ namespace RestaurantAppBE.RestServices.Controllers
         public async Task<int?> UpdateComanda([FromBody] ComandaDto comanda, [FromQuery] int id)
         {
             return await _comandaService.UpdateComanda(comanda, id);
+        
         }
+
+        [HttpDelete]
+        [Route("{id:int}")]
+        public async Task<int?> DeleteComanda([FromQuery] int id)
+        {
+            return await _comandaService.DeleteComanda(id);
+        }
+
+        [HttpGet]
+        public async Task<List<Comanda>> GetAllComanda()
+        {
+            return await _comandaService.GetAllComanda();
+        }
+
+        [HttpGet]
+       [Route("{id:int}")]
+        public async Task<Comanda> GetComanda( int id)
+        {
+            return await _comandaService.GetComanda(id);
+        }
+
     }
 }
 
