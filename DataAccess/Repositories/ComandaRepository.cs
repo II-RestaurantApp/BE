@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using RestaurantAppBE.DataAccess.Context;
 using RestaurantAppBE.DataAccess.DTOs;
+using RestaurantAppBE.DataAccess.Enums;
 using RestaurantAppBE.DataAccess.Models;
 using RestaurantAppBE.DataAccess.Repositories.Interfaces;
 
@@ -23,7 +24,8 @@ namespace RestaurantAppBE.DataAccess.Repositories
             await _context.Comenzi.AddAsync(new Comanda
             {
                 Total = comanda.Total,
-                UserId = comanda.UserId
+                UserId = comanda.UserId,
+                status = StatusComanda.IN_PROCESARE,
             });
 
             await _context.SaveChangesAsync();
@@ -72,6 +74,8 @@ namespace RestaurantAppBE.DataAccess.Repositories
             return await _context.SaveChangesAsync();
         }
 
+        
+
 
         public async Task<List<Comanda>> GetAllComanda() { 
             var ComandaList = _context.Comenzi.ToListAsync();
@@ -103,6 +107,20 @@ namespace RestaurantAppBE.DataAccess.Repositories
                 return await _context.SaveChangesAsync();
             }
             return 0;
+        }
+
+        public async Task<int> UpdateStatusComanda(int id, StatusComanda status)
+        {
+            var alreadyExist = await _context.Comenzi
+                    .Where((currentComanda) => currentComanda.ComId == id)
+                    .FirstOrDefaultAsync();
+
+            if(alreadyExist is not null)
+            {
+                alreadyExist.status = status;
+            }
+
+            return await _context.SaveChangesAsync();
         }
     }
 

@@ -1,4 +1,5 @@
-﻿using RestaurantAppBE.DataAccess.Models;
+﻿using RestaurantAppBE.DataAccess.Enums;
+using RestaurantAppBE.DataAccess.Models;
 
 namespace RestaurantAppBE.DataAccess.DTOs
 {
@@ -8,5 +9,6 @@ namespace RestaurantAppBE.DataAccess.DTOs
         public int UserId { get; set; }
         public User User { get; set; }
         public List<Item>? Item { get; set; }
+        public StatusComanda status { get; set; }
     }
 }

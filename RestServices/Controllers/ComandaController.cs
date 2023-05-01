@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RestaurantAppBE.RestServices.Services;
 using System.Threading.Tasks;
+using RestaurantAppBE.DataAccess.Enums;
 
 namespace RestaurantAppBE.RestServices.Controllers
 {
@@ -29,11 +30,17 @@ namespace RestaurantAppBE.RestServices.Controllers
         public async Task<int?> UpdateComanda([FromBody] ComandaDto comanda, [FromQuery] int id)
         {
             return await _comandaService.UpdateComanda(comanda, id);
-        
+
+        }
+
+        [HttpPut]
+        [Route("status")]
+        public async Task<int> UpdateStatusComanda([FromQuery] int id, [FromQuery] StatusComanda status)
+        {
+            return await _comandaService.UpdateStatusComanda(id, status); 
         }
 
         [HttpDelete]
-        [Route("{id:int}")]
         public async Task<int?> DeleteComanda([FromQuery] int id)
         {
             return await _comandaService.DeleteComanda(id);
