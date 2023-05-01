@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using RestaurantAppBE.DataAccess.Enums;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RestaurantAppBE.DataAccess.Models
@@ -16,5 +17,6 @@ namespace RestaurantAppBE.DataAccess.Models
         [ForeignKey("UserId")]
         public User User { get; set; }
         public List<ComandaItem>? Items { get; set; }
+        public StatusComanda status { get; set; }
     }
 }

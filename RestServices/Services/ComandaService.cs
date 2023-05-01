@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RestaurantAppBE.DataAccess.DTOs;
+using RestaurantAppBE.DataAccess.Enums;
 using RestaurantAppBE.DataAccess.Models;
 using RestaurantAppBE.DataAccess.Repositories;
 using RestaurantAppBE.DataAccess.Repositories.Interfaces;
@@ -43,6 +44,11 @@ namespace RestaurantAppBE.RestServices.Services
         public async Task<int?> DeleteComanda(int id)
         {
             return await _comandaRepository.DeleteComanda(id);
+        }
+
+        public Task<int> UpdateStatusComanda(int id, StatusComanda status)
+        {
+            return _comandaRepository.UpdateStatusComanda(id, status);
         }
     }
 }
