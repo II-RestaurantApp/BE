@@ -69,9 +69,10 @@ namespace RestaurantAppBE.DataAccess.Repositories
 
             if (alreadyExistingItem is not null)
             {
-              alreadyExistingItem.Denumire = item.Denumire;
-              alreadyExistingItem.Pret = item.Pret;
-              alreadyExistingItem.Gramaj = item.Gramaj;
+                alreadyExistingItem.Denumire = item.Denumire;
+                alreadyExistingItem.Pret = item.Pret;
+                alreadyExistingItem.Gramaj = item.Gramaj;
+                
             }
 
             return await _context.SaveChangesAsync();

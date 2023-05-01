@@ -39,6 +39,12 @@ namespace RestaurantAppBE.RestServices.Controllers
             return await _ingredientService.RegisterIngredient(ingredient);
         }
 
+        [HttpPut]
+        public async Task<int?> UpdateIngredient([FromBody] IngredientDto ingredient, [FromQuery] int id)
+        {
+            return await _ingredientService.UpdateIngredient(ingredient, id);
+        }
+
         [HttpDelete]
         [Route("{id:int}")]
         public async Task<int> DeleteItem(int id)

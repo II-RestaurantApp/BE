@@ -7,6 +7,7 @@ namespace RestaurantAppBE.RestServices.Services.Interfaces
     {
         Task<List<Ingredient>> GetIngredient();
         Task<Ingredient> GetIngredientById(int id);
+        Task<int> UpdateIngredient(IngredientDto ingredient, int id);
         Task<int> DeleteIngredient(int id);
         Task<int> RegisterIngredient(IngredientDto ingredient);
     }
