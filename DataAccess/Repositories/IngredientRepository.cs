@@ -46,7 +46,6 @@ namespace RestaurantAppBE.DataAccess.Repositories
 
             return await _context.SaveChangesAsync();
         }
-
         public async Task<int> DeleteIngredient(int id)
         {
             var ingredient = await _context.Ingredients.FindAsync(id);
