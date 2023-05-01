@@ -47,7 +47,7 @@ namespace RestaurantAppBE.DataAccess.Repositories
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<int> UpdateIngredient(Ingredient ingredient, int id)
+        public async Task<int> UpdateIngredient(IngredientDto ingredient, int id)
         {
             var alreadyExist = await _context.Ingredients.Where((currentIngredient) => currentIngredient.IngrId == id)
                     .FirstOrDefaultAsync();
