@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RestaurantAppBE.DataAccess.DTOs;
-using RestaurantAppBE.DataAccess.Models;
 using RestaurantAppBE.DataAccess.Repositories;
 using RestaurantAppBE.DataAccess.Repositories.Interfaces;
 using RestaurantAppBE.RestServices.Services.Interfaces;
@@ -44,7 +43,5 @@ namespace RestaurantAppBE.RestServices.Services
         {
             return await _comandaRepository.DeleteComanda(id);
         }
-
-      
     }
 }
