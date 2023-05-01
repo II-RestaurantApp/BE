@@ -46,6 +46,20 @@ namespace RestaurantAppBE.DataAccess.Repositories
 
             return await _context.SaveChangesAsync();
         }
+
+        public async Task<int> UpdateIngredient(Ingredient ingredient, int id)
+        {
+            var alreadyExist = await _context.Ingredients.Where((currentIngredient) => currentIngredient.IngrId == id)
+                    .FirstOrDefaultAsync();
+            if (alreadyExist is not null)
+            {
+                alreadyExist.IngrName = ingredient.IngrName;
+
+            }
+
+            return await _context.SaveChangesAsync();
+        }
+
         public async Task<int> DeleteIngredient(int id)
         {
             var ingredient = await _context.Ingredients.FindAsync(id);
@@ -58,5 +72,6 @@ namespace RestaurantAppBE.DataAccess.Repositories
 
             return 0;
         }
+
     }
 }
