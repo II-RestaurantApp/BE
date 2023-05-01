@@ -17,5 +17,10 @@ namespace RestaurantAppBE.RestServices.Services
         {
             return await _ingredienRepository.RegisterIngredient(ingredient);
         }
+
+        public async Task<int> DeleteIngredient(int id)
+        {
+            return await _ingredienRepository.DeleteIngredient(id);
+        }
     }
 }

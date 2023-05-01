@@ -3,6 +3,7 @@ using RestaurantAppBE.DataAccess.Models;
 using RestaurantAppBE.RestServices.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RestaurantAppBE.RestServices.Services;
 
 namespace RestaurantAppBE.RestServices.Controllers
 {
@@ -21,6 +22,13 @@ namespace RestaurantAppBE.RestServices.Controllers
         public async Task<int> RegisterIngredient([FromBody] IngredientDto ingredient)
         {
             return await _ingredientService.RegisterIngredient(ingredient);
+        }
+
+        [HttpDelete]
+        [Route("{id:int}")]
+        public async Task<int> DeleteItem(int id)
+        {
+            return await _ingredientService.DeleteIngredient(id);
         }
 
     }
