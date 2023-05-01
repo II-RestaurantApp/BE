@@ -50,8 +50,9 @@ namespace RestaurantAppBE.RestServices.Repositories
             {
                 Name = user.Name,
                 Email = user.Email,
-                Password = user.Password
-            });
+                Password = user.Password,
+                type = user.type
+            }); 
             return await _context.SaveChangesAsync();
         }
     }
