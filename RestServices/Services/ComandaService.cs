@@ -44,7 +44,5 @@ namespace RestaurantAppBE.RestServices.Services
         {
             return await _comandaRepository.DeleteComanda(id);
         }
-
-      
     }
 }
