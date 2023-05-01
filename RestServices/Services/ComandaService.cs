@@ -19,6 +19,16 @@ namespace RestaurantAppBE.RestServices.Services
             _comandaRepository = comandaRepository;
         }
 
+        public async Task<List<Comanda>> GetAllComanda()
+        {
+            return await _comandaRepository.GetAllComanda();
+        }
+
+        public async Task<Comanda> GetComanda([FromQuery] int id)
+        {
+            return await _comandaRepository.GetComanda(id);
+        }
+
         public async Task<int?> RegisterComanda(ComandaDto comanda)
         {
 
@@ -30,15 +40,9 @@ namespace RestaurantAppBE.RestServices.Services
         {
             return await _comandaRepository.UpdateComanda(comanda, id);
         }
-
-        public async Task<List<Comanda>> GetAllComanda()
+        public async Task<int?> DeleteComanda(int id)
         {
-            return await _comandaRepository.GetAllComanda();
-        }
-
-        public async Task<Comanda> GetComanda([FromQuery] int id)
-        {
-            return await _comandaRepository.GetComanda(id);
+            return await _comandaRepository.DeleteComanda(id);
         }
     }
 }
