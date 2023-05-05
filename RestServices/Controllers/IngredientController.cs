@@ -34,12 +34,14 @@ namespace RestaurantAppBE.RestServices.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "ADMIN")]
         public async Task<int> RegisterIngredient([FromBody] IngredientDto ingredient)
         {
             return await _ingredientService.RegisterIngredient(ingredient);
         }
 
         [HttpPut]
+        [Authorize(Roles = "ADMIN")]
         public async Task<int?> UpdateIngredient([FromBody] IngredientDto ingredient, [FromQuery] int id)
         {
             return await _ingredientService.UpdateIngredient(ingredient, id);
@@ -47,6 +49,7 @@ namespace RestaurantAppBE.RestServices.Controllers
 
         [HttpDelete]
         [Route("{id:int}")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<int> DeleteItem(int id)
         {
             return await _ingredientService.DeleteIngredient(id);
