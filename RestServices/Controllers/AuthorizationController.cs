@@ -33,7 +33,7 @@ namespace RestaurantAppBE.RestServices.Controllers
                     });
                 default:
                     var userData = await _userService.GetUser(user);
-                    var sessionInfo = _sessionService.GetSessionInfo(HttpContext, userData.UserId, authToken);
+                    var sessionInfo = _sessionService.GetSessionInfo(HttpContext, userData.UserId, userData.type, authToken);
 
                     return Ok(new AuthResultDto
                     {
@@ -42,9 +42,10 @@ namespace RestaurantAppBE.RestServices.Controllers
                         {
                             SessionId = sessionInfo.SessionId,
                             UserId = sessionInfo.UserId,
-                            BearerToken = sessionInfo.BearerToken
+                            BearerToken = sessionInfo.BearerToken,
+                            UserType = sessionInfo.UserType
                         }
-                    });
+                    }); 
             }
         }
     }
