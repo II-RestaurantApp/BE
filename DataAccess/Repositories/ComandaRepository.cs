@@ -5,6 +5,8 @@ using RestaurantAppBE.DataAccess.DTOs;
 using RestaurantAppBE.DataAccess.Enums;
 using RestaurantAppBE.DataAccess.Models;
 using RestaurantAppBE.DataAccess.Repositories.Interfaces;
+using Microsoft.AspNetCore.Http;
+
 
 namespace RestaurantAppBE.DataAccess.Repositories
 {
@@ -52,25 +54,32 @@ namespace RestaurantAppBE.DataAccess.Repositories
 
             if (alreadyExistingComanda is not null)
             {
-                alreadyExistingComanda.Total = comanda.Total;
-                alreadyExistingComanda.UserId = comanda.UserId;
-
-                
-                alreadyExistingComanda.Items = new List<ComandaItem>();
-                foreach (var item in comanda.Item)
+                if (alreadyExistingComanda.status == (int)StatusComanda.IN_ASTEPTARE)
                 {
-                    var itemEntity = await _context.Items.FindAsync(item.Id);
-                    if (itemEntity is not null)
+                    alreadyExistingComanda.Total = comanda.Total;
+                    alreadyExistingComanda.UserId = comanda.UserId;
+
+
+                    alreadyExistingComanda.Items = new List<ComandaItem>();
+                    foreach (var item in comanda.Item)
                     {
-                        alreadyExistingComanda.Items.Add(new ComandaItem
+                        var itemEntity = await _context.Items.FindAsync(item.Id);
+                        if (itemEntity is not null)
                         {
-                            ComandaId = alreadyExistingComanda.ComId,
-                            ItemItemId = itemEntity.Id
-                        });
+                            alreadyExistingComanda.Items.Add(new ComandaItem
+                            {
+                                ComandaId = alreadyExistingComanda.ComId,
+                                ItemItemId = itemEntity.Id
+                            });
+                        }
                     }
                 }
+                else
+                {
+                    throw new BadHttpRequestException("Comanda nu mai poate fi modificata");
+                }
+                
             }
-
             return await _context.SaveChangesAsync();
         }
 
