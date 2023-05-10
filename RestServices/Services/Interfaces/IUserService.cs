@@ -9,5 +9,6 @@ namespace RestaurantAppBE.RestServices.Services.Interfaces
         Task<User> GetUserById(int id);
         Task<int?> RegisterUser(UserRegisterDto user);
         Task<int?> UpdateUser(UserRegisterDto user, int id);
+        Task<int> DeleteUser(int id);
     }
 }

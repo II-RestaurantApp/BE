@@ -51,5 +51,12 @@ namespace RestaurantAppBE.Controllers
         {
             return await _userService.UpdateUser(user, id);
         }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<int> DeleteUser(int id)
+        {
+            return await _userService.DeleteUser(id);
+        }
     }
 }
