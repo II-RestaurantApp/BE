@@ -45,5 +45,11 @@ namespace RestaurantAppBE.Controllers
                     });
             }
         }
+
+        [HttpPut]
+        public async Task<int?> UpdateUser([FromBody] UserRegisterDto user, [FromQuery] int id)
+        {
+            return await _userService.UpdateUser(user, id);
+        }
     }
 }

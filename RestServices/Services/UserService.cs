@@ -40,5 +40,10 @@ namespace RestaurantAppBE.RestServices.Services
             return result == 1 ? result : null;
 
         }
+
+        public async Task<int?> UpdateUser(UserRegisterDto user, int id)
+        {
+            return await _userRepository.UpdateUser(user, id);
+        }
     }
 }

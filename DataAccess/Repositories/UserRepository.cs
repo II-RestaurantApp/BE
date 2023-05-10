@@ -55,5 +55,23 @@ namespace RestaurantAppBE.RestServices.Repositories
             }); 
             return await _context.SaveChangesAsync();
         }
+
+        public async Task<int> UpdateUser(UserRegisterDto user, int id)
+        {
+            var alreadyExistingUser =
+                await _context.Users
+                    .Where((currentUser) => currentUser.UserId == id)
+                    .FirstOrDefaultAsync();
+
+            if (alreadyExistingUser is not null)
+            {
+                alreadyExistingUser.Name = user.Name;
+                alreadyExistingUser.Email = user.Email;
+                alreadyExistingUser.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+                alreadyExistingUser.type = user.type;
+
+            }
+            return await _context.SaveChangesAsync();
+        }
     }
 }
