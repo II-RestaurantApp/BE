@@ -83,9 +83,6 @@ namespace RestaurantAppBE.DataAccess.Repositories
             return await _context.SaveChangesAsync();
         }
 
-        
-
-
         public async Task<List<Comanda>> GetAllComanda() { 
             var ComandaList = _context.Comenzi.ToListAsync();
 

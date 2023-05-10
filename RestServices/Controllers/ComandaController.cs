@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using RestaurantAppBE.RestServices.Services;
 using System.Threading.Tasks;
 using RestaurantAppBE.DataAccess.Enums;
+using Microsoft.AspNetCore.Http;
+using RestaurantAppBE.DataAccess.Constants;
 
 namespace RestaurantAppBE.RestServices.Controllers
 {
@@ -27,9 +29,18 @@ namespace RestaurantAppBE.RestServices.Controllers
         }
 
         [HttpPut]
-        public async Task<int?> UpdateComanda([FromBody] ComandaDto comanda, [FromQuery] int id)
+        public async Task<IActionResult> UpdateComanda([FromBody] ComandaDto comanda, [FromQuery] int id)
         {
-            return await _comandaService.UpdateComanda(comanda, id);
+
+            await _comandaService.UpdateComanda(comanda, id);
+            try
+            {   
+                return new OkObjectResult("Updated succesfully");
+            }
+            catch (BadHttpRequestException ex)
+            {
+                return new BadRequestObjectResult(ex.Message);
+            }
 
         }
 
