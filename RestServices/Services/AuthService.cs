@@ -6,6 +6,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
+using RestaurantAppBE.DataAccess.Enums;
 
 namespace RestaurantAppBE.RestServices.Services
 {
@@ -33,7 +34,9 @@ namespace RestaurantAppBE.RestServices.Services
                 return null;
             }
             var jwt = _configuration.GetSection("Jwt").Get<JwtContent>();
-            var claims = new[]
+
+            var claims = new List<Claim>()
+            //var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, jwt.Subject),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
@@ -42,6 +45,11 @@ namespace RestaurantAppBE.RestServices.Services
                 new Claim("Name", userData.Name),
                 new Claim("Password", userData.Password)
             };
+
+            if (userData.type == UserType.ADMIN)
+            {
+                claims.Add(new Claim("Roles", userData.type.ToString()));
+            }
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.Key));
             var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
