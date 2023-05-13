@@ -3,6 +3,8 @@ using RestaurantAppBE.DataAccess.Models;
 using RestaurantAppBE.RestServices.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RestaurantAppBE.Migrations;
+using RestaurantAppBE.RestServices.Services;
 
 namespace RestaurantAppBE.Controllers
 {
@@ -29,7 +31,7 @@ namespace RestaurantAppBE.Controllers
         public async Task<IActionResult> RegisterUser([FromBody] UserRegisterDto user)
         {
             var result = await _userService.RegisterUser(user);
-            switch (result)
+            /*switch (result)
             {
                 case null:
                     return Ok(new UserResponseDto
@@ -43,6 +45,15 @@ namespace RestaurantAppBE.Controllers
                         Success = true,
                         Message = "User was successfuly registered!"
                     });
+            }*/
+
+            try
+            {
+                return new OkObjectResult("Registered succesfully!");
+            }
+            catch (BadHttpRequestException ex)
+            {
+                return new BadRequestObjectResult(ex.Message);
             }
         }
 

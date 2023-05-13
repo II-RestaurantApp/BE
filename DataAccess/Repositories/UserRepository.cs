@@ -46,13 +46,21 @@ namespace RestaurantAppBE.RestServices.Repositories
 
         public async Task<int> RegisterUser(UserRegisterDto user)
         {
-            await _context.Users.AddAsync(new User
+            if (_context.Users.Any(u => u.Email == user.Email))
             {
-                Name = user.Name,
-                Email = user.Email,
-                Password = user.Password,
-                type = user.type
-            }); 
+                throw new BadHttpRequestException("Email deja inregistrat!");
+            }
+            else
+            {
+                await _context.Users.AddAsync(new User
+                {
+                    Name = user.Name,
+                    Email = user.Email,
+                    Password = user.Password,
+                    type = user.type
+                });
+            }
+
             return await _context.SaveChangesAsync();
         }
 
