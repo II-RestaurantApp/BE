@@ -94,5 +94,12 @@ namespace RestaurantAppBE.RestServices.Repositories
 
             return 0;
         }
+
+        public async Task<List<User>> GetAllUser()
+        {
+            var UserList = _context.Users.ToListAsync();
+
+            return await UserList;
+        }
     }
 }

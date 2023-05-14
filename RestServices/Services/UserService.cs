@@ -50,5 +50,10 @@ namespace RestaurantAppBE.RestServices.Services
         {
             return await _userRepository.DeleteUser(id);
         }
+
+        public async Task<List<User>> GetAllUser()
+        {
+            return await _userRepository.GetAllUser();
+        }
     }
 }

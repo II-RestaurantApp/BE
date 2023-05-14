@@ -69,5 +69,12 @@ namespace RestaurantAppBE.Controllers
         {
             return await _userService.DeleteUser(id);
         }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<List<User>> GetAllUser()
+        {
+            return await _userService.GetAllUser();
+        }
     }
 }
