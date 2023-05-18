@@ -31,48 +31,62 @@ namespace RestaurantAppBE.DataAccess.Repositories
 
         public async Task<int> RegisterItem(ItemDto item)
         {
-            var alreadyExistingItem =
-                await _context.Items
-                    .Where((currentItem) => currentItem.Denumire.Equals(item.Denumire))
-                    .FirstOrDefaultAsync();
-            if (alreadyExistingItem is not null)
+            if (string.IsNullOrEmpty(item.Denumire) || item.Denumire == null || item.Pret == 0 || item.Gramaj == 0 || item.Ingrediente == null || item.Ingrediente.Count == 0) 
             {
-                return 0;
+                throw new BadHttpRequestException("Completeaza toate campurile!");
             }
-
-            await _context.Items.AddAsync(new Item
+            else
             {
-                Denumire = item.Denumire,
-                Gramaj = item.Gramaj,
-                Pret = item.Pret
-            });
-            await _context.SaveChangesAsync();
-            var lastItem = _context.Items.OrderByDescending(item => item.Id).FirstOrDefault();
-            item.Ingrediente?.ForEach(async (ingredient) =>
-            {
-                await _context.AddAsync(new ItemIngredient
+                var alreadyExistingItem =
+                    await _context.Items
+                        .Where((currentItem) => currentItem.Denumire.Equals(item.Denumire))
+                        .FirstOrDefaultAsync();
+                if (alreadyExistingItem is not null)
                 {
-                    ItemsItemId = lastItem.Id,
-                    IngredientId = ingredient.IngrId
+                    return 0;
+                }
+
+                await _context.Items.AddAsync(new Item
+                {
+                    Denumire = item.Denumire,
+                    Gramaj = item.Gramaj,
+                    Pret = item.Pret
                 });
-            });
+                await _context.SaveChangesAsync();
+                var lastItem = _context.Items.OrderByDescending(item => item.Id).FirstOrDefault();
+                item.Ingrediente?.ForEach(async (ingredient) =>
+                {
+                    await _context.AddAsync(new ItemIngredient
+                    {
+                        ItemsItemId = lastItem.Id,
+                        IngredientId = ingredient.IngrId
+                    });
+                });
+            }
             return await _context.SaveChangesAsync();
         }
 
         
         public async Task<int> UpdateItem(ItemDto item, int id)
         {
-            var alreadyExistingItem =
-                await _context.Items
-                    .Where((currentItem) => currentItem.Id == id)
-                    .FirstOrDefaultAsync();
-
-            if (alreadyExistingItem is not null)
+            if (string.IsNullOrEmpty(item.Denumire) || item.Denumire == null || item.Pret == 0 || item.Gramaj == 0)
             {
-                alreadyExistingItem.Denumire = item.Denumire;
-                alreadyExistingItem.Pret = item.Pret;
-                alreadyExistingItem.Gramaj = item.Gramaj;
-                
+                throw new BadHttpRequestException("Completeaza toate campurile!");
+            }
+            else
+            {
+                var alreadyExistingItem =
+                    await _context.Items
+                        .Where((currentItem) => currentItem.Id == id)
+                        .FirstOrDefaultAsync();
+
+                if (alreadyExistingItem is not null)
+                {
+                    alreadyExistingItem.Denumire = item.Denumire;
+                    alreadyExistingItem.Pret = item.Pret;
+                    alreadyExistingItem.Gramaj = item.Gramaj;
+
+                }
             }
 
             return await _context.SaveChangesAsync();

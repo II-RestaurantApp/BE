@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using RestaurantAppBE.DataAccess.Enums;
 using Microsoft.AspNetCore.Http;
 using RestaurantAppBE.DataAccess.Constants;
+using RestaurantAppBE.Migrations;
 
 namespace RestaurantAppBE.RestServices.Controllers
 {
@@ -22,10 +23,17 @@ namespace RestaurantAppBE.RestServices.Controllers
         }
 
         [HttpPost]
-        public async Task<int?> RegisterComanda([FromBody] ComandaDto comanda)
+        public async Task<IActionResult> RegisterComanda([FromBody] ComandaDto comanda)
         {
-            return await _comandaService.RegisterComanda(comanda);
-
+            await _comandaService.RegisterComanda(comanda);
+            try
+            {
+                return new OkObjectResult("Comanda inregistrata cu succes!");
+            }
+            catch (BadHttpRequestException ex)
+            {
+                return new BadRequestObjectResult(ex.Message);
+            }
         }
 
         [HttpPut]
@@ -35,7 +43,7 @@ namespace RestaurantAppBE.RestServices.Controllers
             await _comandaService.UpdateComanda(comanda, id);
             try
             {   
-                return new OkObjectResult("Updated succesfully");
+                return new OkObjectResult("Comanda modificata cu succes!");
             }
             catch (BadHttpRequestException ex)
             {
@@ -46,9 +54,17 @@ namespace RestaurantAppBE.RestServices.Controllers
 
         [HttpPut]
         [Route("status")]
-        public async Task<int> UpdateStatusComanda([FromQuery] int id, [FromQuery] StatusComanda status)
+        public async Task<IActionResult> UpdateStatusComanda([FromQuery] int id, [FromQuery] StatusComanda status)
         {
-            return await _comandaService.UpdateStatusComanda(id, status); 
+            await _comandaService.UpdateStatusComanda(id, status);
+            try
+            {
+                return new OkObjectResult("Status updatat cu succes!");
+            }
+            catch (BadHttpRequestException ex)
+            {
+                return new BadRequestObjectResult(ex.Message);
+            }
         }
 
         [HttpDelete]
@@ -64,7 +80,7 @@ namespace RestaurantAppBE.RestServices.Controllers
         }
 
         [HttpGet]
-       [Route("{id:int}")]
+        [Route("{id:int}")]
         public async Task<Comanda> GetComanda( int id)
         {
             return await _comandaService.GetComanda(id);
