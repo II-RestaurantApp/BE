@@ -19,9 +19,8 @@ namespace RestaurantAppBE.DataAccess.Repositories
 
         public async Task<List<Item>> GetItem()
         {
-            var ItemList = _context.Items.ToListAsync();
-            return await ItemList;
-
+            var ItemList = await _context.Items.Include(item => item.Ingrediente).ToListAsync();
+            return ItemList;
         }
 
         public async Task<Item> GetItemById(int id)

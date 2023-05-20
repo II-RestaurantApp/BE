@@ -53,7 +53,7 @@ namespace RestaurantAppBE.RestServices.Controllers
         }
 
         [HttpGet]
-       [Route("{id:int}")]
+        [Route("{id:int}")]
         public async Task<Comanda> GetComanda( int id)
         {
             return await _comandaService.GetComanda(id);
