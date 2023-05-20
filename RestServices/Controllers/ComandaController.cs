@@ -44,10 +44,20 @@ namespace RestaurantAppBE.RestServices.Controllers
             return await _comandaService.UpdateStatusComanda(id, status); 
         }
 
+        [Authorize]
         [HttpDelete]
         public async Task<int?> DeleteComanda([FromQuery] int id)
         {
-            return await _comandaService.DeleteComanda(id);
+            int currentUserId = _authService.GetCurrentUserId();
+            if (_authService.GetUserRole() == "ADMIN")
+            {
+                return await _comandaService.DeleteComanda(id);
+            }
+            else
+            {
+                return await _comandaService.DeleteComanda(id, currentUserId);
+            }
+            
         }
 
         [Authorize]

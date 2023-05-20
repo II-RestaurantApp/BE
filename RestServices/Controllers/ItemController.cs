@@ -29,21 +29,21 @@ namespace RestaurantAppBE.RestServices.Controllers
             return await _itemService.GetItem();
         }
 
-        [Authorize(Policy = "AdminOnly")]
+        [Authorize(Roles = "ADMIN")]
         [HttpPost]
         public async Task<int?> RegisterItem([FromBody] ItemDto item)
         {
             return await _itemService.RegisterItem(item);
         }
 
-        [Authorize(Policy = "AdminOnly")]
+        [Authorize(Roles = "ADMIN")]
         [HttpPut]
         public async Task<int?> UpdateItem([FromBody] ItemDto item, [FromQuery] int id)
         {
             return await _itemService.UpdateItem(item, id);
         }
 
-        [Authorize(Policy = "AdminOnly")]
+        [Authorize(Roles = "ADMIN")]
         [HttpDelete]
         [Route("{id:int}")]
         

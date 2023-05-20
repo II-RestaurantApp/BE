@@ -127,6 +127,21 @@ namespace RestaurantAppBE.DataAccess.Repositories
             return 0;
         }
 
+        public async Task<int?> DeleteComanda(int id, int currentUserId)
+        {
+            var alreadyExistingComanda =
+               await _context.Comenzi
+                   .Where((currentComanda) => currentComanda.ComId == id && currentComanda.UserId == currentUserId)
+                   .FirstOrDefaultAsync();
+
+            if (alreadyExistingComanda is not null)
+            {
+                _context.Comenzi.Remove(alreadyExistingComanda);
+                return await _context.SaveChangesAsync();
+            }
+            return 0;
+        }
+
         public async Task<int> UpdateStatusComanda(int id, StatusComanda status)
         {
             var alreadyExist = await _context.Comenzi
@@ -140,6 +155,7 @@ namespace RestaurantAppBE.DataAccess.Repositories
 
             return await _context.SaveChangesAsync();
         }
+
     }
 
 }

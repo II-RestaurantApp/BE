@@ -50,7 +50,6 @@ namespace RestaurantAppBE.RestServices.Services
 
             if (userData.type == UserType.ADMIN)
             {
-                claims.Add(new Claim("Roles", userData.type.ToString()));
                 claims.Add(new Claim(ClaimTypes.Role, userData.type.ToString()));
             }
 

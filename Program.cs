@@ -96,10 +96,6 @@ options =>
     };
 });
 
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("AdminOnly", policy => policy.RequireClaim("Roles"));
-});
 
 var app = builder.Build();
 
