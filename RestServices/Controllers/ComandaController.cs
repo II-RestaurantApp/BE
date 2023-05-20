@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using RestaurantAppBE.RestServices.Services;
 using System.Threading.Tasks;
 using RestaurantAppBE.DataAccess.Enums;
+using System.Security.Claims;
 
 namespace RestaurantAppBE.RestServices.Controllers
 {
@@ -14,9 +15,12 @@ namespace RestaurantAppBE.RestServices.Controllers
     public class ComandaController
     {
         private readonly IComandaService _comandaService;
-        public ComandaController(IComandaService comandaService)
+        private readonly IAuthService _authService;
+
+        public ComandaController(IComandaService comandaService, IAuthService authService)
         {
             _comandaService = comandaService;
+            _authService = authService;
         }
 
         [HttpPost]
@@ -46,17 +50,36 @@ namespace RestaurantAppBE.RestServices.Controllers
             return await _comandaService.DeleteComanda(id);
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<List<Comanda>> GetAllComanda()
         {
-            return await _comandaService.GetAllComanda();
+            int currentUserId = _authService.GetCurrentUserId();
+            if (_authService.GetUserRole() == "ADMIN")
+            {
+                return await _comandaService.GetAllComanda();
+            }
+            else
+            {
+                return await _comandaService.GetAllComanda(currentUserId);
+            }
         }
 
         [HttpGet]
        [Route("{id:int}")]
         public async Task<Comanda> GetComanda( int id)
         {
-            return await _comandaService.GetComanda(id);
+            int currentUserId = _authService.GetCurrentUserId();
+
+            if (_authService.GetUserRole() == "ADMIN")
+            {
+                return await _comandaService.GetComanda(id);
+            }
+            else
+            {
+                return await _comandaService.GetComanda(id, currentUserId);
+            }
+
         }
 
     }

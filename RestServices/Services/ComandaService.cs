@@ -25,9 +25,19 @@ namespace RestaurantAppBE.RestServices.Services
             return await _comandaRepository.GetAllComanda();
         }
 
+        public async Task<List<Comanda>> GetAllComanda(int userId)
+        {
+            return await _comandaRepository.GetAllComanda(userId);
+        }
+
         public async Task<Comanda> GetComanda([FromQuery] int id)
         {
             return await _comandaRepository.GetComanda(id);
+        }
+
+        public async Task<Comanda> GetComanda([FromQuery] int id, [FromQuery] int userId)
+        {
+            return await _comandaRepository.GetComanda(id, userId);
         }
 
         public async Task<int?> RegisterComanda(ComandaDto comanda)

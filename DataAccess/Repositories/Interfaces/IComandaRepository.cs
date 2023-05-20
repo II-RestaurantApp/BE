@@ -9,11 +9,13 @@ namespace RestaurantAppBE.DataAccess.Repositories.Interfaces
     {
         Task<List<Comanda>> GetAllComanda();
         Task<Comanda> GetComanda(int id);
+        Task<Comanda> GetComanda(int id, int userId);
         Task<int> RegisterComanda(ComandaDto comanda);
         Task<int> UpdateComanda(ComandaDto comanda, int id);
         Task<int> UpdateStatusComanda(int id, StatusComanda status);
         
         Task<int> DeleteComanda(int id);
+        Task<List<Comanda>> GetAllComanda(int userId);
     }
 }
 

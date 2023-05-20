@@ -83,6 +83,12 @@ namespace RestaurantAppBE.DataAccess.Repositories
             return await ComandaList;
         }
 
+        public async Task<List<Comanda>> GetAllComanda(int userId)
+        {
+            var ComandaList = _context.Comenzi.Where(c => c.UserId == userId) .ToListAsync();
+            return await ComandaList;
+        }
+
         public async Task<Comanda> GetComanda(int id)
         
         {
@@ -93,6 +99,18 @@ namespace RestaurantAppBE.DataAccess.Repositories
 
             return  alreadyExistingComanda;
                 }
+
+        public async Task<Comanda> GetComanda(int id, int userId)
+
+        {
+            var alreadyExistingComanda =
+                await _context.Comenzi
+                    .Where((currentComanda) => currentComanda.ComId == id  && currentComanda.UserId == userId)
+                    .FirstOrDefaultAsync();
+
+            return alreadyExistingComanda;
+        }
+
 
         public async Task<int> DeleteComanda(int id)
         {

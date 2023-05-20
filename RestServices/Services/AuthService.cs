@@ -14,11 +14,13 @@ namespace RestaurantAppBE.RestServices.Services
     {
         IConfiguration _configuration;
         IUserService _userService;
+        IHttpContextAccessor _httpContextAccessor;
 
-        public AuthService(IConfiguration configuration, IUserService userService)
+        public AuthService(IConfiguration configuration, IUserService userService, IHttpContextAccessor httpContextAccessor)
         {
             _configuration = configuration;
             _userService = userService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<string> AuthToken(UserDto user)
@@ -49,6 +51,7 @@ namespace RestaurantAppBE.RestServices.Services
             if (userData.type == UserType.ADMIN)
             {
                 claims.Add(new Claim("Roles", userData.type.ToString()));
+                claims.Add(new Claim(ClaimTypes.Role, userData.type.ToString()));
             }
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.Key));
@@ -61,6 +64,28 @@ namespace RestaurantAppBE.RestServices.Services
                                 signingCredentials: signIn
                             );
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public int GetCurrentUserId()
+        {
+            var userIdClaim = _httpContextAccessor.HttpContext.User.FindFirst("Id");
+            if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
+            {
+                return userId;
+            }
+
+            return 0; 
+        }
+
+        public string GetUserRole()
+        {
+            var roleClaim = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Role);
+            if (roleClaim != null)
+            {
+                return roleClaim.Value;
+            }
+
+            return string.Empty; 
         }
     }
 }
