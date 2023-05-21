@@ -23,20 +23,39 @@ namespace RestaurantAppBE.RestServices.Controllers
             _authService = authService;
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<int?> RegisterComanda([FromBody] ComandaDto comanda)
         {
-            return await _comandaService.RegisterComanda(comanda);
-
+            int currentUserId = _authService.GetCurrentUserId();
+            if (_authService.GetUserRole() == "ADMIN" || comanda.UserId == currentUserId)
+            {
+                return await _comandaService.RegisterComanda(comanda);
+            }
+            else
+            {
+                return 0;
+            }
         }
 
+        [Authorize]
         [HttpPut]
         public async Task<int?> UpdateComanda([FromBody] ComandaDto comanda, [FromQuery] int id)
         {
-            return await _comandaService.UpdateComanda(comanda, id);
-
+            int currentUserId = _authService.GetCurrentUserId();
+            if (_authService.GetUserRole() == "ADMIN")
+            {
+                return await _comandaService.UpdateComanda(comanda, id);
+            }
+            else
+            {
+                
+                return await _comandaService.UpdateComanda(comanda, id, currentUserId);
+                
+            }
         }
 
+        [Authorize(Roles = "ADMIN")]
         [HttpPut]
         [Route("status")]
         public async Task<int> UpdateStatusComanda([FromQuery] int id, [FromQuery] StatusComanda status)
@@ -56,8 +75,7 @@ namespace RestaurantAppBE.RestServices.Controllers
             else
             {
                 return await _comandaService.DeleteComanda(id, currentUserId);
-            }
-            
+            }  
         }
 
         [Authorize]
@@ -75,8 +93,9 @@ namespace RestaurantAppBE.RestServices.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
-       [Route("{id:int}")]
+        [Route("{id:int}")]
         public async Task<Comanda> GetComanda( int id)
         {
             int currentUserId = _authService.GetCurrentUserId();
@@ -89,7 +108,6 @@ namespace RestaurantAppBE.RestServices.Controllers
             {
                 return await _comandaService.GetComanda(id, currentUserId);
             }
-
         }
 
     }

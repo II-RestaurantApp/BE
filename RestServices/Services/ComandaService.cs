@@ -51,6 +51,11 @@ namespace RestaurantAppBE.RestServices.Services
         {
             return await _comandaRepository.UpdateComanda(comanda, id);
         }
+
+        public async Task<int> UpdateComanda(ComandaDto comanda, int id, int currentUserId)
+        {
+            return await _comandaRepository.UpdateComanda(comanda, id, currentUserId);
+        }
         public async Task<int?> DeleteComanda(int id)
         {
             return await _comandaRepository.DeleteComanda(id);

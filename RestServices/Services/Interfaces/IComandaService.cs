@@ -9,6 +9,7 @@ namespace RestaurantAppBE.RestServices.Services.Interfaces
     {
         Task<int?> RegisterComanda(ComandaDto comanda);
         Task<int> UpdateComanda(ComandaDto comanda, int id);
+        Task<int> UpdateComanda(ComandaDto comanda, int id, int currentUserId);
         Task<int> UpdateStatusComanda( int id, StatusComanda status);
         Task<int?> DeleteComanda(int id);
         Task<int?> DeleteComanda(int id, int currentUserId);
