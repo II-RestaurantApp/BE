@@ -21,12 +21,13 @@ namespace RestaurantAppBE.DataAccess.Repositories
 
         public async Task<int> RegisterComanda(ComandaDto comanda)
         {
-            await _context.Comenzi.AddAsync(new Comanda
-            {
+            Comanda c = new Comanda{
                 Total = comanda.Total,
                 UserId = comanda.UserId,
                 status = StatusComanda.IN_ASTEPTARE,
-            });
+            };
+
+            await _context.Comenzi.AddAsync(c);
 
             await _context.SaveChangesAsync();
             var lastComanda = _context.Comenzi.OrderByDescending(comanda => comanda.ComId).FirstOrDefault();
@@ -35,8 +36,9 @@ namespace RestaurantAppBE.DataAccess.Repositories
                 await _context.AddAsync(new ComandaItem
                 {
                     ComandaId = lastComanda.ComId,
-                    ItemItemId = item.Id
+                    ItemItemId = item.Id,
                 });
+                c.Total += item.Pret;
             });
 
             return await _context.SaveChangesAsync();
@@ -122,6 +124,7 @@ namespace RestaurantAppBE.DataAccess.Repositories
 
             return await _context.SaveChangesAsync();
         }
+
     }
 
 }

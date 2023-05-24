@@ -12,5 +12,6 @@ namespace RestaurantAppBE.RestServices.Services.Interfaces
         Task<int?> DeleteComanda(int id);
         Task<List<Comanda>> GetAllComanda();
         Task<Comanda> GetComanda(int id);
+
     }
 }
