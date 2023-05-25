@@ -8,5 +8,6 @@ namespace RestaurantAppBE.RestServices.Services.Interfaces
         Task<User> GetUser(UserDto user);
         Task<User> GetUserById(int id);
         Task<int?> RegisterUser(UserRegisterDto user);
+        Task<List<User>> GetUsers();
     }
 }
