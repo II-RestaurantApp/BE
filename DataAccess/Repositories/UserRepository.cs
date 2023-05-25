@@ -55,5 +55,10 @@ namespace RestaurantAppBE.RestServices.Repositories
             }); 
             return await _context.SaveChangesAsync();
         }
+
+        public async Task<List<User>> GetUsers()
+        {
+            return await _context.Users.ToListAsync();
+        }
     }
 }

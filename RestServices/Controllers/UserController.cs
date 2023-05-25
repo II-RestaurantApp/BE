@@ -25,6 +25,18 @@ namespace RestaurantAppBE.Controllers
             return await _userService.GetUserById(id);
         }
 
+        [HttpGet]
+        public async Task<List<UserWithoutPassword>> GetUsers()
+        {
+            return (await _userService.GetUsers()).Select(user => new UserWithoutPassword()
+            {
+                UserId = user.UserId,
+                Name = user.Name,
+                Email = user.Email,
+                type = user.type
+            }).ToList();
+        }
+
         [HttpPost]
         public async Task<IActionResult> RegisterUser([FromBody] UserRegisterDto user)
         {

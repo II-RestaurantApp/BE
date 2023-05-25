@@ -40,5 +40,10 @@ namespace RestaurantAppBE.RestServices.Services
             return result == 1 ? result : null;
 
         }
+
+        public async Task<List<User>> GetUsers()
+        {
+            return await _userRepository.GetUsers();
+        }
     }
 }
