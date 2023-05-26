@@ -10,6 +10,7 @@ using RestaurantAppBE.RestServices.Repositories.Interfaces;
 using RestaurantAppBE.RestServices.Services;
 using RestaurantAppBE.RestServices.Services.Interfaces;
 using System.Text;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +29,10 @@ builder.Services.AddCors(options =>
                           builder.AllowAnyHeader();
                       });
 });
+
+builder.Services.AddControllers().AddJsonOptions(x =>
+   x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles
+);
 
 builder.Services.AddControllers();
 
