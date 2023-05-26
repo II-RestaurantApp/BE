@@ -41,6 +41,16 @@ namespace RestaurantAppBE.RestServices.Services
 
         }
 
+        public async Task<int?> UpdateUser(UserRegisterDto user, int id)
+        {
+            return await _userRepository.UpdateUser(user, id);
+        }
+
+        public async Task<int> DeleteUser(int id)
+        {
+            return await _userRepository.DeleteUser(id);
+        }
+
         public async Task<List<User>> GetUsers()
         {
             return await _userRepository.GetUsers();

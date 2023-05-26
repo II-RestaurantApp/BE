@@ -46,14 +46,53 @@ namespace RestaurantAppBE.RestServices.Repositories
 
         public async Task<int> RegisterUser(UserRegisterDto user)
         {
-            await _context.Users.AddAsync(new User
+            if (_context.Users.Any(u => u.Email == user.Email))
             {
-                Name = user.Name,
-                Email = user.Email,
-                Password = user.Password,
-                type = user.type
-            }); 
+                throw new BadHttpRequestException("Email deja inregistrat!");
+            }
+            else
+            {
+                await _context.Users.AddAsync(new User
+                {
+                    Name = user.Name,
+                    Email = user.Email,
+                    Password = user.Password,
+                    type = user.type
+                });
+            }
+
             return await _context.SaveChangesAsync();
+        }
+
+        public async Task<int> UpdateUser(UserRegisterDto user, int id)
+        {
+            var alreadyExistingUser =
+                await _context.Users
+                    .Where((currentUser) => currentUser.UserId == id)
+                    .FirstOrDefaultAsync();
+
+            if (alreadyExistingUser is not null)
+            {
+                alreadyExistingUser.Name = user.Name;
+                alreadyExistingUser.Email = user.Email;
+                alreadyExistingUser.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+                alreadyExistingUser.type = user.type;
+
+            }
+            return await _context.SaveChangesAsync();
+        }
+
+        public async Task<int> DeleteUser(int id)
+        {
+            var user = await _context.Users.FindAsync(id);
+
+            if (user != null)
+            {
+                _context.Users.Remove(user);
+                return await _context.SaveChangesAsync();
+            }
+
+            return 0;
         }
 
         public async Task<List<User>> GetUsers()
