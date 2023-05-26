@@ -72,9 +72,15 @@ namespace RestaurantAppBE.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<List<User>> GetAllUser()
+        public async Task<List<UserWithoutPassword>> GetUsers()
         {
-            return await _userService.GetAllUser();
+            return (await _userService.GetUsers()).Select(user => new UserWithoutPassword()
+            {
+                UserId = user.UserId,
+                Name = user.Name,
+                Email = user.Email,
+                type = user.type
+            }).ToList();
         }
     }
 }

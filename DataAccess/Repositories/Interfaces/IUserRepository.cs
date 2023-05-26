@@ -10,6 +10,6 @@ namespace RestaurantAppBE.RestServices.Repositories.Interfaces
         Task<int> RegisterUser(UserRegisterDto user);
         Task<int> UpdateUser(UserRegisterDto user, int id);
         Task<int> DeleteUser(int id);
-        Task<List<User>> GetAllUser();
+        Task<List<User>> GetUsers();
     }
 }

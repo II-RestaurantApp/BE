@@ -19,9 +19,8 @@ namespace RestaurantAppBE.DataAccess.Repositories
 
         public async Task<List<Item>> GetItem()
         {
-            var ItemList = _context.Items.ToListAsync();
-            return await ItemList;
-
+            var ItemList = await _context.Items.Include(item => item.Ingrediente).ToListAsync();
+            return ItemList;
         }
 
         public async Task<Item> GetItemById(int id)
@@ -73,24 +72,39 @@ namespace RestaurantAppBE.DataAccess.Repositories
             {
                 throw new BadHttpRequestException("Completeaza toate campurile!");
             }
-            else
+            
+            var alreadyExistingItem =
+                await _context.Items
+                    .Where((currentItem) => currentItem.Id == id)
+                    .Include(item => item.Ingrediente)
+                    .FirstOrDefaultAsync();
+
+            if (alreadyExistingItem is null)
             {
-                var alreadyExistingItem =
-                    await _context.Items
-                        .Where((currentItem) => currentItem.Id == id)
-                        .FirstOrDefaultAsync();
-
-                if (alreadyExistingItem is not null)
-                {
-                    alreadyExistingItem.Denumire = item.Denumire;
-                    alreadyExistingItem.Pret = item.Pret;
-                    alreadyExistingItem.Gramaj = item.Gramaj;
-
-                }
+                return 0;
             }
+
+            alreadyExistingItem.Denumire = item.Denumire;
+            alreadyExistingItem.Pret = item.Pret;
+            alreadyExistingItem.Gramaj = item.Gramaj;
+            alreadyExistingItem.Ingrediente?.ForEach(ingredient =>
+            {
+                _context.ItemIngredients.Remove(ingredient); 
+            });
+            await _context.SaveChangesAsync();
+            alreadyExistingItem.Ingrediente = new List<ItemIngredient>();
+
+            item.Ingrediente?.ForEach(ingredient =>
+            {
+                alreadyExistingItem.Ingrediente.Add(new ItemIngredient()
+                {
+                    IngredientId = ingredient.IngrId,
+                    ItemsItemId = alreadyExistingItem.Id,
+                });
+            });
 
             return await _context.SaveChangesAsync();
-            }
+        }
 
         public async Task<int> DeleteItem(int id)
         {
