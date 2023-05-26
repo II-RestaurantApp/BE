@@ -93,10 +93,12 @@ namespace RestaurantAppBE.DataAccess.Repositories
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<List<Comanda>> GetAllComanda() { 
-            var ComandaList = _context.Comenzi.ToListAsync();
+        public async Task<List<Comanda>> GetAllComanda() {
+            var ComandaList = await _context.Comenzi
+                .Include(c => c.Items).ThenInclude(i => i.Item)
+                .ToListAsync();
 
-            return await ComandaList;
+            return ComandaList;
         }
 
         public async Task<Comanda> GetComanda(int id)
@@ -105,6 +107,7 @@ namespace RestaurantAppBE.DataAccess.Repositories
             var alreadyExistingComanda =
                 await _context.Comenzi
                     .Where((currentComanda) => currentComanda.ComId == id)
+                    .Include(c => c.Items).ThenInclude(i => i.Item)
                     .FirstOrDefaultAsync();
 
             return  alreadyExistingComanda;
