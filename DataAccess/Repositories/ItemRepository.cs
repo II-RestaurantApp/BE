@@ -64,18 +64,35 @@ namespace RestaurantAppBE.DataAccess.Repositories
             var alreadyExistingItem =
                 await _context.Items
                     .Where((currentItem) => currentItem.Id == id)
+                    .Include(item => item.Ingrediente)
                     .FirstOrDefaultAsync();
 
-            if (alreadyExistingItem is not null)
+            if (alreadyExistingItem is null)
             {
-                alreadyExistingItem.Denumire = item.Denumire;
-                alreadyExistingItem.Pret = item.Pret;
-                alreadyExistingItem.Gramaj = item.Gramaj;
-                
+                return 0;
             }
 
+            alreadyExistingItem.Denumire = item.Denumire;
+            alreadyExistingItem.Pret = item.Pret;
+            alreadyExistingItem.Gramaj = item.Gramaj;
+            alreadyExistingItem.Ingrediente?.ForEach(ingredient =>
+            {
+                _context.ItemIngredients.Remove(ingredient); 
+            });
+            await _context.SaveChangesAsync();
+            alreadyExistingItem.Ingrediente = new List<ItemIngredient>();
+
+            item.Ingrediente?.ForEach(ingredient =>
+            {
+                alreadyExistingItem.Ingrediente.Add(new ItemIngredient()
+                {
+                    IngredientId = ingredient.IngrId,
+                    ItemsItemId = alreadyExistingItem.Id,
+                });
+            });
+
             return await _context.SaveChangesAsync();
-            }
+        }
 
         public async Task<int> DeleteItem(int id)
         {
