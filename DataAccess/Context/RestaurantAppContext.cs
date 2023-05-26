@@ -53,5 +53,6 @@ namespace RestaurantAppBE.DataAccess.Context
         public virtual DbSet<Item> Items { get; set; }
         public virtual DbSet<Ingredient> Ingredients { get; set; }
         public virtual DbSet<Comanda> Comenzi { get; set; }
+        public virtual DbSet<ItemIngredient> ItemIngredients { get; set; }
     }
 }

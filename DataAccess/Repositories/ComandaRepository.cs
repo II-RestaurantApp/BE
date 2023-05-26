@@ -5,6 +5,8 @@ using RestaurantAppBE.DataAccess.DTOs;
 using RestaurantAppBE.DataAccess.Enums;
 using RestaurantAppBE.DataAccess.Models;
 using RestaurantAppBE.DataAccess.Repositories.Interfaces;
+using Microsoft.AspNetCore.Http;
+
 
 namespace RestaurantAppBE.DataAccess.Repositories
 {
@@ -21,6 +23,11 @@ namespace RestaurantAppBE.DataAccess.Repositories
 
         public async Task<int> RegisterComanda(ComandaDto comanda)
         {
+            if (comanda.Total == 0 || comanda.UserId == 0 || comanda.status == null || comanda.Item.Count == 0 || comanda.Item == null)
+            { 
+                throw new BadHttpRequestException("Completeaza toate campurile!");
+		    }
+
             await _context.Comenzi.AddAsync(new Comanda
             {
                 Total = comanda.Total,
@@ -35,12 +42,12 @@ namespace RestaurantAppBE.DataAccess.Repositories
                 await _context.AddAsync(new ComandaItem
                 {
                     ComandaId = lastComanda.ComId,
-                    ItemItemId = item.Id
+                    ItemItemId = item.Id,
                 });
+                lastComanda.Total += item.Pret;
             });
 
             return await _context.SaveChangesAsync();
-
         }
 
         public async Task<int> UpdateComanda(ComandaDto comanda, int id)
@@ -50,32 +57,41 @@ namespace RestaurantAppBE.DataAccess.Repositories
                     .Where((currentComanda) => currentComanda.ComId == id)
                     .FirstOrDefaultAsync();
 
-            if (alreadyExistingComanda is not null)
+            if (comanda.Total == 0 || comanda.UserId == 0 || comanda.status == null)
+                throw new BadHttpRequestException("Completeaza toate campurile!");
+            else
             {
-                alreadyExistingComanda.Total = comanda.Total;
-                alreadyExistingComanda.UserId = comanda.UserId;
-
-                
-                alreadyExistingComanda.Items = new List<ComandaItem>();
-                foreach (var item in comanda.Item)
+                if (alreadyExistingComanda is not null)
                 {
-                    var itemEntity = await _context.Items.FindAsync(item.Id);
-                    if (itemEntity is not null)
+                    if (alreadyExistingComanda.status == (int)StatusComanda.IN_ASTEPTARE)
                     {
-                        alreadyExistingComanda.Items.Add(new ComandaItem
+                        alreadyExistingComanda.Total = comanda.Total;
+                        alreadyExistingComanda.UserId = comanda.UserId;
+
+
+                        alreadyExistingComanda.Items = new List<ComandaItem>();
+                        foreach (var item in comanda.Item)
                         {
-                            ComandaId = alreadyExistingComanda.ComId,
-                            ItemItemId = itemEntity.Id
-                        });
+                            var itemEntity = await _context.Items.FindAsync(item.Id);
+                            if (itemEntity is not null)
+                            {
+                                alreadyExistingComanda.Items.Add(new ComandaItem
+                                {
+                                    ComandaId = alreadyExistingComanda.ComId,
+                                    ItemItemId = itemEntity.Id
+                                });
+                            }
+                        }
                     }
+                    else
+                    {
+                        throw new BadHttpRequestException("Comanda nu mai poate fi modificata");
+                    }
+
                 }
             }
-
             return await _context.SaveChangesAsync();
         }
-
-        
-
 
         public async Task<List<Comanda>> GetAllComanda() {
             var ComandaList = await _context.Comenzi
@@ -120,11 +136,19 @@ namespace RestaurantAppBE.DataAccess.Repositories
 
             if(alreadyExist is not null)
             {
-                alreadyExist.status = status;
+                if (status == StatusComanda.ANULATA && alreadyExist.status != StatusComanda.IN_ASTEPTARE)
+                {
+                    throw new BadHttpRequestException("Comanda nu mai poate fi anulata!");
+                }
+                else
+                {
+                    alreadyExist.status = status;
+                }
+                
             }
 
             return await _context.SaveChangesAsync();
         }
-    }
 
+    }
 }
