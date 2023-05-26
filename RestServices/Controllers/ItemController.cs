@@ -29,6 +29,7 @@ namespace RestaurantAppBE.RestServices.Controllers
             return await _itemService.GetItem();
         }
 
+        [Authorize(Roles = "ADMIN")]
         [HttpPost]
         public async Task<IActionResult> RegisterItem([FromBody] ItemDto item)
         {
@@ -43,7 +44,7 @@ namespace RestaurantAppBE.RestServices.Controllers
             }
         }
 
-
+        [Authorize(Roles = "ADMIN")]
         [HttpPut]
         public async Task<IActionResult> UpdateItem([FromBody] ItemDto item, [FromQuery] int id)
         {
@@ -57,7 +58,8 @@ namespace RestaurantAppBE.RestServices.Controllers
                 return new BadRequestObjectResult(ex.Message);
             }
         }
-            
+
+        [Authorize(Roles = "ADMIN")]
         [HttpDelete]
         [Route("{id:int}")]
         

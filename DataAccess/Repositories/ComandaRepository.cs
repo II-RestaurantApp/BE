@@ -93,8 +93,49 @@ namespace RestaurantAppBE.DataAccess.Repositories
             return await _context.SaveChangesAsync();
         }
 
+        public async Task<int> UpdateComanda(ComandaDto comanda, int id, int currentUserId)
+        {
+            var alreadyExistingComanda =
+                await _context.Comenzi
+                    .Where((currentComanda) => currentComanda.ComId == id && currentComanda.UserId == currentUserId)
+                    .FirstOrDefaultAsync();
+
+            if (alreadyExistingComanda is not null)
+            {
+                alreadyExistingComanda.Total = comanda.Total;
+                alreadyExistingComanda.UserId = comanda.UserId;
+
+
+                alreadyExistingComanda.Items = new List<ComandaItem>();
+                foreach (var item in comanda.Item)
+                {
+                    var itemEntity = await _context.Items.FindAsync(item.Id);
+                    if (itemEntity is not null)
+                    {
+                        alreadyExistingComanda.Items.Add(new ComandaItem
+                        {
+                            ComandaId = alreadyExistingComanda.ComId,
+                            ItemItemId = itemEntity.Id
+                        });
+                    }
+                }
+            }
+
+            return await _context.SaveChangesAsync();
+        }
+        
         public async Task<List<Comanda>> GetAllComanda() {
             var ComandaList = await _context.Comenzi
+                .Include(c => c.Items).ThenInclude(i => i.Item)
+                .ToListAsync();
+
+            return ComandaList;
+        }
+
+        public async Task<List<Comanda>> GetAllComanda(int id)
+        {
+            var ComandaList = await _context.Comenzi
+                .Where(comanda => comanda.UserId == id)
                 .Include(c => c.Items).ThenInclude(i => i.Item)
                 .ToListAsync();
 
@@ -113,11 +154,38 @@ namespace RestaurantAppBE.DataAccess.Repositories
             return  alreadyExistingComanda;
                 }
 
+        public async Task<Comanda> GetComanda(int id, int userId)
+
+        {
+            var alreadyExistingComanda =
+                await _context.Comenzi
+                    .Where((currentComanda) => currentComanda.ComId == id  && currentComanda.UserId == userId)
+                    .FirstOrDefaultAsync();
+
+            return alreadyExistingComanda;
+        }
+
+
         public async Task<int> DeleteComanda(int id)
         {
             var alreadyExistingComanda =
                await _context.Comenzi
                    .Where((currentComanda) => currentComanda.ComId == id)
+                   .FirstOrDefaultAsync();
+
+            if (alreadyExistingComanda is not null)
+            {
+                _context.Comenzi.Remove(alreadyExistingComanda);
+                return await _context.SaveChangesAsync();
+            }
+            return 0;
+        }
+
+        public async Task<int?> DeleteComanda(int id, int currentUserId)
+        {
+            var alreadyExistingComanda =
+               await _context.Comenzi
+                   .Where((currentComanda) => currentComanda.ComId == id && currentComanda.UserId == currentUserId)
                    .FirstOrDefaultAsync();
 
             if (alreadyExistingComanda is not null)

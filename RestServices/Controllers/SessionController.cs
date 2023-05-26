@@ -3,7 +3,7 @@ using RestaurantAppBE.RestServices.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FitnessAppRestaurantAppBE.RestServices.Controllers
+namespace RestaurantAppBE.RestServices.Controllers
 {
     [Route("session")]
     [Authorize]
