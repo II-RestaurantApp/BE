@@ -31,16 +31,32 @@ namespace RestaurantAppBE.RestServices.Controllers
 
         [Authorize(Roles = "ADMIN")]
         [HttpPost]
-        public async Task<int?> RegisterItem([FromBody] ItemDto item)
+        public async Task<IActionResult> RegisterItem([FromBody] ItemDto item)
         {
-            return await _itemService.RegisterItem(item);
+            await _itemService.RegisterItem(item);
+            try
+            {
+                return new OkObjectResult("Item inregistrat cu succes!");
+            }
+            catch (BadHttpRequestException ex)
+            {
+                return new BadRequestObjectResult(ex.Message);
+            }
         }
 
         [Authorize(Roles = "ADMIN")]
         [HttpPut]
-        public async Task<int?> UpdateItem([FromBody] ItemDto item, [FromQuery] int id)
+        public async Task<IActionResult> UpdateItem([FromBody] ItemDto item, [FromQuery] int id)
         {
-            return await _itemService.UpdateItem(item, id);
+            await _itemService.UpdateItem(item, id);
+            try
+            {
+                return new OkObjectResult("Item modificat cu succes!");
+            }
+            catch (BadHttpRequestException ex)
+            {
+                return new BadRequestObjectResult(ex.Message);
+            }
         }
 
         [Authorize(Roles = "ADMIN")]

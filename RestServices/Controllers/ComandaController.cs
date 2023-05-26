@@ -7,6 +7,9 @@ using RestaurantAppBE.RestServices.Services;
 using System.Threading.Tasks;
 using RestaurantAppBE.DataAccess.Enums;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
+using RestaurantAppBE.DataAccess.Constants;
+using RestaurantAppBE.Migrations;
 
 namespace RestaurantAppBE.RestServices.Controllers
 {
@@ -25,42 +28,64 @@ namespace RestaurantAppBE.RestServices.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<int?> RegisterComanda([FromBody] ComandaDto comanda)
+        public async Task<IActionResult> RegisterComanda([FromBody] ComandaDto comanda)
         {
-            int currentUserId = _authService.GetCurrentUserId();
-            if (_authService.GetUserRole() == "ADMIN" || comanda.UserId == currentUserId)
+            try
             {
-                return await _comandaService.RegisterComanda(comanda);
+                int currentUserId = _authService.GetCurrentUserId();
+                if (_authService.GetUserRole() == "ADMIN" || comanda.UserId == currentUserId)
+                {
+                    await _comandaService.RegisterComanda(comanda);
+                    return new OkObjectResult("Comanda inregistrata cu succes!");
+                }
+                else
+                {
+                    return new UnauthorizedObjectResult("User-ul nu este admin!");
+                }
             }
-            else
-            {
-                return 0;
+            catch (BadHttpRequestException ex)
+            { 
+                return new BadRequestObjectResult(ex.Message);
             }
         }
 
         [Authorize]
         [HttpPut]
-        public async Task<int?> UpdateComanda([FromBody] ComandaDto comanda, [FromQuery] int id)
+        public async Task<IActionResult> UpdateComanda([FromBody] ComandaDto comanda, [FromQuery] int id)
         {
-            int currentUserId = _authService.GetCurrentUserId();
-            if (_authService.GetUserRole() == "ADMIN")
+            try
             {
-                return await _comandaService.UpdateComanda(comanda, id);
+                int currentUserId = _authService.GetCurrentUserId();
+                if (_authService.GetUserRole() == "ADMIN")
+                {
+                    await _comandaService.UpdateComanda(comanda, id);
+                    return new OkObjectResult("Comanda modificata cu succes!");
+                }
+                else
+                {
+                    return new UnauthorizedObjectResult("User-ul nu este admin!");
+                }
             }
-            else
+            catch (BadHttpRequestException ex)
             {
-                
-                return await _comandaService.UpdateComanda(comanda, id, currentUserId);
-                
+                return new BadRequestObjectResult(ex.Message);
             }
         }
 
         [Authorize(Roles = "ADMIN")]
         [HttpPut]
         [Route("status")]
-        public async Task<int> UpdateStatusComanda([FromQuery] int id, [FromQuery] StatusComanda status)
+        public async Task<IActionResult> UpdateStatusComanda([FromQuery] int id, [FromQuery] StatusComanda status)
         {
-            return await _comandaService.UpdateStatusComanda(id, status); 
+            await _comandaService.UpdateStatusComanda(id, status);
+            try
+            {
+                return new OkObjectResult("Status updatat cu succes!");
+            }
+            catch (BadHttpRequestException ex)
+            {
+                return new BadRequestObjectResult(ex.Message);
+            }
         }
 
         [Authorize]
