@@ -24,29 +24,30 @@ namespace RestaurantAppBE.DataAccess.Repositories
         public async Task<int> RegisterComanda(ComandaDto comanda)
         {
             if (comanda.Total == 0 || comanda.UserId == 0 || comanda.status == null || comanda.Item.Count == 0 || comanda.Item == null)
+            { 
                 throw new BadHttpRequestException("Completeaza toate campurile!");
-            else
+		    }
+
+            await _context.Comenzi.AddAsync(new Comanda
             {
-                await _context.Comenzi.AddAsync(new Comanda
-                {
-                    Total = comanda.Total,
-                    UserId = comanda.UserId,
-                    status = StatusComanda.IN_ASTEPTARE,
-                });
+                Total = comanda.Total,
+                UserId = comanda.UserId,
+                status = StatusComanda.IN_ASTEPTARE,
+            });
 
-                await _context.SaveChangesAsync();
-                var lastComanda = _context.Comenzi.OrderByDescending(comanda => comanda.ComId).FirstOrDefault();
-                comanda.Item?.ForEach(async (item) =>
+            await _context.SaveChangesAsync();
+            var lastComanda = _context.Comenzi.OrderByDescending(comanda => comanda.ComId).FirstOrDefault();
+            comanda.Item?.ForEach(async (item) =>
+            {
+                await _context.AddAsync(new ComandaItem
                 {
-                    await _context.AddAsync(new ComandaItem
-                    {
-                        ComandaId = lastComanda.ComId,
-                        ItemItemId = item.Id
-                    });
+                    ComandaId = lastComanda.ComId,
+                    ItemItemId = item.Id,
                 });
-            }
+                lastComanda.Total += item.Pret;
+            });
+
             return await _context.SaveChangesAsync();
-
         }
 
         public async Task<int> UpdateComanda(ComandaDto comanda, int id)
@@ -145,6 +146,6 @@ namespace RestaurantAppBE.DataAccess.Repositories
 
             return await _context.SaveChangesAsync();
         }
-    }
 
+    }
 }
