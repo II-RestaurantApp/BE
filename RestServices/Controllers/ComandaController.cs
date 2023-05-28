@@ -36,7 +36,7 @@ namespace RestaurantAppBE.RestServices.Controllers
                 if (_authService.GetUserRole() == "ADMIN" || comanda.UserId == currentUserId)
                 {
                     await _comandaService.RegisterComanda(comanda);
-                    return new OkObjectResult("Comanda inregistrata cu succes!");
+                    return new OkResult();
                 }
                 else
                 {
@@ -51,20 +51,12 @@ namespace RestaurantAppBE.RestServices.Controllers
 
         [Authorize]
         [HttpPut]
-        public async Task<IActionResult> UpdateComanda([FromBody] ComandaDto comanda, [FromQuery] int id)
+        public async Task<IActionResult> UpdateComanda([FromBody] Comanda comanda, [FromQuery] int id)
         {
             try
             {
-                int currentUserId = _authService.GetCurrentUserId();
-                if (_authService.GetUserRole() == "ADMIN")
-                {
-                    await _comandaService.UpdateComanda(comanda, id);
-                    return new OkObjectResult("Comanda modificata cu succes!");
-                }
-                else
-                {
-                    return new UnauthorizedObjectResult("User-ul nu este admin!");
-                }
+                await _comandaService.UpdateComanda(comanda, id);
+                return new OkResult();
             }
             catch (BadHttpRequestException ex)
             {
@@ -80,7 +72,7 @@ namespace RestaurantAppBE.RestServices.Controllers
             await _comandaService.UpdateStatusComanda(id, status);
             try
             {
-                return new OkObjectResult("Status updatat cu succes!");
+                return new OkResult();
             }
             catch (BadHttpRequestException ex)
             {

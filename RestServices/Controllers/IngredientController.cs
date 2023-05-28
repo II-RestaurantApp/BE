@@ -42,7 +42,8 @@ namespace RestaurantAppBE.RestServices.Controllers
 
         [Authorize(Roles = "ADMIN")]
         [HttpPut]
-        public async Task<int?> UpdateIngredient([FromBody] IngredientDto ingredient, [FromQuery] int id)
+        [Route("{id}")]
+        public async Task<int?> UpdateIngredient([FromBody] IngredientDto ingredient, [FromRoute] int id)
         {
             return await _ingredientService.UpdateIngredient(ingredient, id);
         }

@@ -36,7 +36,7 @@ namespace RestaurantAppBE.RestServices.Controllers
             await _itemService.RegisterItem(item);
             try
             {
-                return new OkObjectResult("Item inregistrat cu succes!");
+                return new OkResult();
             }
             catch (BadHttpRequestException ex)
             {
@@ -51,7 +51,7 @@ namespace RestaurantAppBE.RestServices.Controllers
             await _itemService.UpdateItem(item, id);
             try
             {
-                return new OkObjectResult("Item modificat cu succes!");
+                return new OkResult();
             }
             catch (BadHttpRequestException ex)
             {

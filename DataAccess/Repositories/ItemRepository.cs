@@ -110,11 +110,15 @@ namespace RestaurantAppBE.DataAccess.Repositories
         {
             var item = await _context.Items.FindAsync(id);
 
-            if (item != null)
+            if (item is null)
             {
-                _context.Items.Remove(item);
-                return await _context.SaveChangesAsync();
+                return 0;
             }
+
+            item.Ingrediente?.ForEach(ingredient => _context.ItemIngredients.Remove(ingredient));
+
+            _context.Items.Remove(item);
+            return await _context.SaveChangesAsync();
 
             return 0;
         }

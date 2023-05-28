@@ -23,7 +23,7 @@ namespace RestaurantAppBE.DataAccess.Repositories
 
         public async Task<int> RegisterComanda(ComandaDto comanda)
         {
-            if (comanda.Total == 0 || comanda.UserId == 0 || comanda.status == null || comanda.Item.Count == 0 || comanda.Item == null)
+            if (comanda.Total == 0 || comanda.UserId == 0 || comanda.Item.Count == 0 || comanda.Item == null)
             { 
                 throw new BadHttpRequestException("Completeaza toate campurile!");
 		    }
@@ -36,25 +36,26 @@ namespace RestaurantAppBE.DataAccess.Repositories
             });
 
             await _context.SaveChangesAsync();
-            var lastComanda = _context.Comenzi.OrderByDescending(comanda => comanda.ComId).FirstOrDefault();
+            var lastComanda = await _context.Comenzi.OrderByDescending(comanda => comanda.ComId).FirstOrDefaultAsync();
             comanda.Item?.ForEach(async (item) =>
             {
                 await _context.AddAsync(new ComandaItem
                 {
                     ComandaId = lastComanda.ComId,
-                    ItemItemId = item.Id,
+                    ItemItemId = item.Product.Id,
+                    Quantity = item.Quantity,
                 });
-                lastComanda.Total += item.Pret;
             });
 
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<int> UpdateComanda(ComandaDto comanda, int id)
+        public async Task<int> UpdateComanda(Comanda comanda, int id)
         {
             var alreadyExistingComanda =
                 await _context.Comenzi
                     .Where((currentComanda) => currentComanda.ComId == id)
+                    .Include((currentComanda) => currentComanda.Items)
                     .FirstOrDefaultAsync();
 
             if (comanda.Total == 0 || comanda.UserId == 0 || comanda.status == null)
@@ -66,21 +67,21 @@ namespace RestaurantAppBE.DataAccess.Repositories
                     if (alreadyExistingComanda.status == (int)StatusComanda.IN_ASTEPTARE)
                     {
                         alreadyExistingComanda.Total = comanda.Total;
-                        alreadyExistingComanda.UserId = comanda.UserId;
 
+                        alreadyExistingComanda.Items?.ForEach(item =>
+                        {
+                            var currentEntry = _context.ComandaItems.Where(entry => entry.ComandaId == id).FirstOrDefault();
+
+                            _context.ComandaItems.Remove(currentEntry);
+                        });
+
+                        _context.SaveChanges();
 
                         alreadyExistingComanda.Items = new List<ComandaItem>();
-                        foreach (var item in comanda.Item)
+
+                        foreach (var item in comanda.Items)
                         {
-                            var itemEntity = await _context.Items.FindAsync(item.Id);
-                            if (itemEntity is not null)
-                            {
-                                alreadyExistingComanda.Items.Add(new ComandaItem
-                                {
-                                    ComandaId = alreadyExistingComanda.ComId,
-                                    ItemItemId = itemEntity.Id
-                                });
-                            }
+                            alreadyExistingComanda.Items.Add(item);
                         }
                     }
                     else
@@ -109,7 +110,7 @@ namespace RestaurantAppBE.DataAccess.Repositories
                 alreadyExistingComanda.Items = new List<ComandaItem>();
                 foreach (var item in comanda.Item)
                 {
-                    var itemEntity = await _context.Items.FindAsync(item.Id);
+                    var itemEntity = await _context.Items.FindAsync(item.Product.Id);
                     if (itemEntity is not null)
                     {
                         alreadyExistingComanda.Items.Add(new ComandaItem
@@ -152,7 +153,7 @@ namespace RestaurantAppBE.DataAccess.Repositories
                     .FirstOrDefaultAsync();
 
             return  alreadyExistingComanda;
-                }
+        }
 
         public async Task<Comanda> GetComanda(int id, int userId)
 
@@ -204,7 +205,7 @@ namespace RestaurantAppBE.DataAccess.Repositories
 
             if(alreadyExist is not null)
             {
-                if (status == StatusComanda.ANULATA && alreadyExist.status != StatusComanda.IN_ASTEPTARE)
+                if (status == StatusComanda.ANULATA)
                 {
                     throw new BadHttpRequestException("Comanda nu mai poate fi anulata!");
                 }

@@ -8,14 +8,13 @@ namespace RestaurantAppBE.DataAccess.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-
         public int ComId { get; set; }
         public int Total { get; set; }
 
         [Display(Name = "UserId")]
         public int UserId { get; set; }
         [ForeignKey("UserId")]
-        public User User { get; set; }
+        public User? User { get; set; }
         public List<ComandaItem>? Items { get; set; }
         public StatusComanda status { get; set; }
     }

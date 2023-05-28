@@ -8,7 +8,7 @@ namespace RestaurantAppBE.RestServices.Services.Interfaces
     public interface IComandaService
     {
         Task<int?> RegisterComanda(ComandaDto comanda);
-        Task<int> UpdateComanda(ComandaDto comanda, int id);
+        Task<int> UpdateComanda(Comanda comanda, int id);
         Task<int> UpdateComanda(ComandaDto comanda, int id, int currentUserId);
         Task<int> UpdateStatusComanda( int id, StatusComanda status);
         Task<int?> DeleteComanda(int id);

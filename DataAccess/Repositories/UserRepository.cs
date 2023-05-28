@@ -75,8 +75,10 @@ namespace RestaurantAppBE.RestServices.Repositories
             {
                 alreadyExistingUser.Name = user.Name;
                 alreadyExistingUser.Email = user.Email;
-                alreadyExistingUser.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
-                alreadyExistingUser.type = user.type;
+                if (user.Password is not null && !user.Password.Equals(""))
+                {
+                    alreadyExistingUser.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+                }
 
             }
             return await _context.SaveChangesAsync();

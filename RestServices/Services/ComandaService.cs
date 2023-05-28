@@ -47,7 +47,7 @@ namespace RestaurantAppBE.RestServices.Services
             return result == 1 ? result : null;
         }
 
-        public async Task<int> UpdateComanda(ComandaDto comanda, int id)
+        public async Task<int> UpdateComanda(Comanda comanda, int id)
         {
             return await _comandaRepository.UpdateComanda(comanda, id);
         }

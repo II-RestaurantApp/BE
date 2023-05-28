@@ -10,6 +10,7 @@ namespace RestaurantAppBE.DataAccess.Models
         public Comanda? Comanda { get; set; }
         public int ItemItemId { get; set; }
         public Item? Item { get; set; }
+        public int Quantity { get; set; }
 
     }
 }

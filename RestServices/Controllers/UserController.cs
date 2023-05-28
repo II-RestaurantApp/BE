@@ -49,7 +49,7 @@ namespace RestaurantAppBE.Controllers
 
             try
             {
-                return new OkObjectResult("Registered succesfully!");
+                return new OkResult();
             }
             catch (BadHttpRequestException ex)
             {
