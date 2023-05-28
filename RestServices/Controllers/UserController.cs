@@ -31,7 +31,7 @@ namespace RestaurantAppBE.Controllers
         public async Task<IActionResult> RegisterUser([FromBody] UserRegisterDto user)
         {
             var result = await _userService.RegisterUser(user);
-            /*switch (result)
+            switch (result)
             {
                 case null:
                     return Ok(new UserResponseDto
@@ -45,15 +45,6 @@ namespace RestaurantAppBE.Controllers
                         Success = true,
                         Message = "User was successfuly registered!"
                     });
-            }*/
-
-            try
-            {
-                return new OkResult();
-            }
-            catch (BadHttpRequestException ex)
-            {
-                return new BadRequestObjectResult(ex.Message);
             }
         }
 
